@@ -74,6 +74,7 @@ h3 { font-weight: 500; margin: 0; }
 .draw.in :is(path, ellipse):nth-child(3) { animation-delay: .7s; }
 .draw.in :is(path, ellipse):nth-child(4) { animation-delay: 1s; }
 .enso.in-now :is(path, ellipse) { animation-duration: 2.6s; animation-delay: .3s; }
+.enso.in :is(path, ellipse) { animation-delay: 0s !important; }
 .seal { opacity: 0; transform-origin: 150px 152px; }
 .in .seal, .in-now .seal { animation: stamp .5s 2.4s cubic-bezier(.3,1.6,.5,1) forwards; }
 @keyframes ink { to { stroke-dashoffset: 0; } }

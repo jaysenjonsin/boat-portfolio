@@ -20,10 +20,6 @@
       <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
     </filter>
-    <filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.02" numOctaves="2" seed="9" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="7"/>
-    </filter>
     <radialGradient id="glow">
       <stop offset="0" stop-color="#f2a65a" stop-opacity=".55"/>
       <stop offset="1" stop-color="#f2a65a" stop-opacity="0"/>
@@ -47,11 +43,21 @@
   <!-- 1 · the circle -->
   <section class="hero">
     <svg class="enso draw in-now" viewBox="0 0 300 300" role="img" aria-label="An unclosed ink circle with a small red mark at its center">
-      <g filter="url(#brush)" fill="none" stroke-linecap="round">
-        <path pathLength="1" d="M227 58A120 120 0 1 1 150 30" stroke="var(--ink)" stroke-width="15"/>
-        <path pathLength="1" d="M222 66A111 111 0 1 1 152 39" stroke="var(--ink)" stroke-width="2" opacity=".45"/>
+      <g fill="none" stroke="var(--ink)" stroke-linecap="round">
+        <path pathLength="1" d="M234.5 76.5A112 112 0 1 1 119.2 42.3" stroke-width="2.7"/>
+        <path pathLength="1" d="M237.2 76.5A114 114 0 1 1 128.7 38.0" stroke-width="2.7"/>
+        <path pathLength="1" d="M235.1 71.1A116 116 0 1 1 136.7 34.8" stroke-width="2.7"/>
+        <path pathLength="1" d="M230.8 64.0A118 118 0 1 1 139.0 32.5" stroke-width="2.7"/>
+        <path pathLength="1" d="M229.6 60.2A120 120 0 1 1 141.5 30.3" stroke-width="2.7"/>
+        <path pathLength="1" d="M237.6 65.1A122 122 0 1 1 136.0 28.8" stroke-width="2.7"/>
+        <path pathLength="1" d="M237.9 62.5A124 124 0 1 1 134.8 26.9" stroke-width="2.7"/>
+        <path pathLength="1" d="M243.4 65.4A126 126 0 1 1 121.9 27.2" stroke-width="2.7"/>
+        <path pathLength="1" d="M248.7 68.4A128 128 0 1 1 122.9 24.9" stroke-width="2.7"/>
+        <path pathLength="1" d="M250.5 186.6A107 107 0 0 1 49.5 113.4" stroke-width="1" opacity="0.4"/>
+        <path pathLength="1" d="M202.5 240.9A105 105 0 0 1 59.1 202.5" stroke-width="1" opacity="0.3"/>
+        <path pathLength="1" d="M138.6 280.5A131 131 0 0 1 74.9 42.7" stroke-width="1" opacity="0.35"/>
       </g>
-      <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)" filter="url(#rough)"/>
+      <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)"/>
     </svg>
     <h1>hi, i'm jason.</h1>
     <p class="lede">I'm a Full Stack Developer focused on building responsive, accessible, and performant web applications with modern technologies.</p>
@@ -144,10 +150,18 @@
   <section class="hello" id="contact">
     <div class="wrap">
       <svg class="enso small draw" viewBox="0 0 300 300" aria-hidden="true">
-        <g filter="url(#brush)" fill="none" stroke-linecap="round">
-          <path pathLength="1" d="M227 58A120 120 0 1 1 150 30" stroke="var(--ink)" stroke-width="15"/>
-        </g>
-        <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)" filter="url(#rough)"/>
+        <g fill="none" stroke="var(--ink)" stroke-linecap="round">
+        <path pathLength="1" d="M239.1 82.1A112 112 0 1 1 122.9 41.3" stroke-width="2.7"/>
+        <path pathLength="1" d="M233.5 72.4A114 114 0 1 1 127.1 38.3" stroke-width="2.7"/>
+        <path pathLength="1" d="M236.6 72.8A116 116 0 1 1 130.0 35.7" stroke-width="2.7"/>
+        <path pathLength="1" d="M230.7 63.9A118 118 0 1 1 136.0 32.8" stroke-width="2.7"/>
+        <path pathLength="1" d="M230.0 60.6A120 120 0 1 1 146.6 30.0" stroke-width="2.7"/>
+        <path pathLength="1" d="M232.5 60.2A122 122 0 1 1 137.2 28.7" stroke-width="2.7"/>
+        <path pathLength="1" d="M240.3 65.0A124 124 0 1 1 126.6 28.2" stroke-width="2.7"/>
+        <path pathLength="1" d="M243.6 65.7A126 126 0 1 1 127.2 26.1" stroke-width="2.7"/>
+        <path pathLength="1" d="M250.5 70.7A128 128 0 1 1 115.0 26.9" stroke-width="2.7"/>
+      </g>
+        <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)"/>
       </svg>
       <h2 class="reveal">the circle's left open on purpose.<br>say hello.</h2>
       <ul class="links reveal">
