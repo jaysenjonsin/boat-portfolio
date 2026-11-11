@@ -68,7 +68,7 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 
 /* bands with torn edges */
 .band { position: relative; padding: 5rem 0 6rem; }
-.band.blue { background: var(--blue); }
+.band.blue { background: var(--blue); padding-bottom: 8rem; }
 .band.wheat { background: var(--wheat); }
 .band.paper { background: var(--paper); }
 .band.blush { background: var(--blush); }
@@ -81,6 +81,15 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
   border-bottom: 1px dashed currentColor;
 }
 .more:hover { border-bottom-style: solid; }
+
+/* water: thin waves drifting across the work band, and a boat that sails the pen line */
+.sea { overflow: hidden; margin: -1.5rem 0 3rem; position: relative; z-index: 2; }
+.sea.low { position: absolute; left: 0; right: 0; bottom: 1.2rem; margin: 0; }
+.waves { display: block; width: 200%; height: 40px; animation: drift 18s linear infinite; }
+.sea.low .waves { animation-duration: 26s; animation-direction: reverse; opacity: .7; }
+@keyframes drift { to { transform: translateX(-50%); } }
+#boat .bob { animation: bob 4s ease-in-out infinite; transform-origin: 0 10px; }
+@keyframes bob { 0%, 100% { transform: translateY(-2px) rotate(-5deg); } 50% { transform: translateY(2px) rotate(5deg); } }
 
 /* work */
 .jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 3.5rem; }

@@ -95,6 +95,14 @@
     t.append(svg('path', { d, fill: 'currentColor' }));
   });
 
+  /* ---------- water: two thin wave lines per strip, tiled so the drift loops ---------- */
+  document.querySelectorAll('.waves').forEach((w, n) => {
+    [[13, INK, 1.1, 0.85, 0], [30, '#3c5a94', 1, 0.6, -14]].forEach(([y, stroke, width, opacity, shift]) => {
+      const d = `M${shift - 60} ${y}q15 ${n ? -8 : -10} 30 0` + 't30 0'.repeat(46);
+      w.append(svg('path', { d, fill: 'none', stroke, 'stroke-width': width, 'stroke-linecap': 'round', opacity, 'vector-effect': 'non-scaling-stroke' }));
+    });
+  });
+
   /* ---------- work: a small sketch for each job ---------- */
   const line = `fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"`;
   const accent = `fill="none" stroke="${RED}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
@@ -310,7 +318,7 @@
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
-  const thread = $('thread'), pen = thread.querySelector('path');
+  const thread = $('thread'), pen = thread.querySelector('path'), boat = $('boat');
   let total = 0;
   const anchor = (node, [vx, vy]) => {
     const b = node.getBoundingClientRect(), s = b.width / 280;
@@ -338,8 +346,21 @@
     pull();
   };
   const pull = () => {
-    const p = still ? 1 : Math.min(1, (scrollY + innerHeight * 0.75) / thread.parentElement.scrollHeight);
-    pen.style.strokeDashoffset = total * (1 - p);
+    // the line is drawn down to a point a little past mid-screen, and the boat rides its tip
+    const max = document.documentElement.scrollHeight - innerHeight, frac = max > 0 ? Math.min(1, scrollY / max) : 1;
+    let len = total;
+    if (!still && frac < 0.995) {
+      const targetY = scrollY + innerHeight * (0.45 + 0.5 * frac);
+      let lo = 0, hi = total;
+      for (let k = 0; k < 18; k++) {
+        const mid = (lo + hi) / 2;
+        if (pen.getPointAtLength(mid).y < targetY) lo = mid; else hi = mid;
+      }
+      len = lo;
+    }
+    pen.style.strokeDashoffset = total - len;
+    const tip = pen.getPointAtLength(len);
+    boat.setAttribute('transform', `translate(${f(tip.x)} ${f(tip.y - 12)})`);
   };
   let tick = false;
   addEventListener('scroll', () => {
