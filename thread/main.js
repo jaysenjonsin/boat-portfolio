@@ -20,7 +20,7 @@
   const rng = (seed) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
   const f = (n) => n.toFixed(1);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const INK = '#25272e', RED = '#d1492e', PEN = '#3c5a94', OCHRE = '#a97b22', TEAL = '#3f7d78', MOON = '#e8e3d4';
+  const INK = '#25272e', RED = '#d1492e';
 
   /* ---------- the J, sketched over a few passes of the pen ---------- */
   // Hook ends near (62, 168) and the bar starts near (96, 60) in the mark's 280 x 270 box.
@@ -48,41 +48,39 @@
   sketchJ($('mark-top'), 7);
   sketchJ($('mark-end'), 23);
 
-  /* ---------- a page of code, as the hand remembers it ---------- */
-  const code = () => {
-    const c = $('code'), dpr = Math.min(devicePixelRatio || 1, 2);
+  /* ---------- field of writing, with room left for the code ---------- */
+  const asemic = () => {
+    const c = $('asemic'), dpr = Math.min(devicePixelRatio || 1, 2);
     const W = c.clientWidth, H = c.clientHeight;
     c.width = W * dpr; c.height = H * dpr;
     const g = c.getContext('2d');
     g.scale(dpr, dpr);
-    g.lineCap = 'round';
-    const r = rng(42), colW = Math.min(W - 32, 620), x0 = (W - colW) / 2 + 26;
-    const tints = [INK, INK, INK, INK, PEN, PEN, TEAL, OCHRE, RED];
-    let indent = 0, row = 0;
-    for (let y = 16; y < H - 10; y += 13, row++) {
-      const edge = Math.min(1, y / 90, (H - y) / 90);
-      // gutter tick, like a line number
-      g.globalAlpha = 0.3 * edge; g.strokeStyle = INK; g.lineWidth = 1;
-      g.beginPath(); g.moveTo(x0 - 24, y); g.lineTo(x0 - 24 + 4 + (row % 10 > 8 ? 5 : 0), y); g.stroke();
-      if (r() < 0.12) { continue; } // a blank line
-      const step = r();
-      if (step < 0.3 && indent < 5) indent++;
-      else if (step > 0.72 && indent > 0) indent -= r() < 0.3 ? Math.min(indent, 2) : 1;
-      let x = x0 + indent * 22;
-      const words = 1 + Math.floor(r() * (6 - indent * 0.6));
-      for (let w = 0; w < words && x < x0 + colW - 60; w++) {
-        const len = 8 + r() * (w === 0 ? 30 : 58);
-        g.strokeStyle = tints[Math.floor(r() * tints.length)];
-        g.globalAlpha = (0.45 + r() * 0.45) * edge;
-        g.lineWidth = 2.1;
-        g.beginPath(); g.moveTo(x, y + (r() - 0.5));
-        for (let i = 6; i < len; i += 6) g.lineTo(x + i, y + (r() - 0.5) * 1.6);
-        g.lineTo(x + len, y + (r() - 0.5));
-        g.stroke();
-        x += len + 8;
+    // mask: a pair of braces left blank in the middle of the page
+    const m = el('canvas', { width: W, height: H }).getContext('2d', { willReadFrequently: true });
+    const size = Math.min(H * 0.8, W * 0.55);
+    m.font = `${size}px Georgia, serif`; m.textAlign = 'center'; m.textBaseline = 'middle';
+    m.lineWidth = size * 0.09; m.lineJoin = 'round';
+    m.strokeText('{ }', W / 2, H / 2); m.fillText('{ }', W / 2, H / 2);
+    const mask = m.getImageData(0, 0, W, H).data;
+    const blank = (x, y) => mask[((y | 0) * W + (x | 0)) * 4 + 3] > 40;
+    const r = rng(42);
+    const colW = Math.min(W, 760), x0 = (W - colW) / 2;
+    g.lineWidth = 0.7; g.lineCap = 'round';
+    for (let y = 10; y < H - 4; y += 8.5) {
+      const fade = Math.min(1, y / 70); // the writing thickens as it starts
+      let x = x0 + r() * 12;
+      while (x < x0 + colW - 10) {
+        const len = 8 + r() * 34;
+        if (r() < fade && !blank(x, y) && !blank(x + len / 2, y) && !blank(x + len, y)) {
+          g.strokeStyle = r() < 0.025 ? RED : INK;
+          g.globalAlpha = 0.3 + r() * 0.55;
+          g.beginPath(); g.moveTo(x, y);
+          for (let i = 2.5; i < len; i += 2.5) g.lineTo(x + i, y + (r() - 0.5) * 5.5);
+          g.stroke();
+        }
+        x += len + 4 + r() * 5;
       }
     }
-    g.globalAlpha = 1;
   };
 
   /* ---------- torn paper edges ---------- */
@@ -93,7 +91,7 @@
     let d = 'M0 28L0 14';
     for (let x = 0; x <= 1000; x += 6 + r() * 16) d += `L${f(x)} ${f(r() < 0.04 ? 3 + r() * 4 : 11 + r() * 6)}`;
     d += 'L1000 14L1000 28Z';
-    if (!t.closest('.night')) t.append(svg('path', { d, fill: '#fcf9f1', transform: 'translate(0 -3)' }));
+    t.append(svg('path', { d, fill: '#fcf9f1', transform: 'translate(0 -3)' }));
     t.append(svg('path', { d, fill: 'currentColor' }));
   });
 
@@ -169,63 +167,128 @@
     $('cards').append(li);
   });
 
-  /* ---------- skills: books on shelves ---------- */
-  SKILLS.forEach(([title, skills], cat) => {
-    const r = rng(40 + cat * 7);
-    const books = el('ul', { className: 'books' });
-    skills.forEach((skill, k) => {
-      const li = el('li', { className: `book s${cat}${k === skills.length - 1 && skills.length > 5 ? ' lean' : ''}` }, el('span', { textContent: skill }));
-      li.firstChild.style.setProperty('--w', `${f(2 + r() * 0.9)}rem`);
-      li.firstChild.style.paddingBlock = `${f(0.9 + r() * 0.9)}rem`;
-      books.append(li);
-    });
-    $('shelves').append(el('div', { className: 'shelf reveal' }, el('h3', { textContent: title }), books));
-  });
-
-  /* ---------- night: a few stars and a hatched moon ---------- */
+  /* ---------- one motion, many marks ---------- */
   (() => {
-    const r = rng(31), sky = $('sky');
-    for (let k = 0; k < 90; k++) {
-      const c = svg('circle', { cx: f(r() * 1000), cy: f(r() * 600), r: f(0.5 + r() * 1.3), fill: MOON, opacity: f(0.2 + r() * 0.6) });
-      if (k % 6 === 0) { c.classList.add('tw'); c.style.animationDelay = `${f(-r() * 4)}s`; }
-      sky.append(c);
+    const r = rng(77), g = svg('g', { stroke: '#4b4a3c', 'stroke-linecap': 'round' });
+    for (let i = 0; i < 420; i++) {
+      const t = Math.pow(r(), 0.8);
+      const cx = 60 + t * 600, cy = 30 + 190 * Math.pow(t, 1.6) - 60 * Math.sin(t * 3);
+      const spread = 12 + 34 * Math.sin(t * Math.PI);
+      const x = cx + (r() - 0.5) * spread * 2.4, y = cy + (r() - 0.5) * spread;
+      const a = 0.5 + t * 0.5 + (r() - 0.5) * 0.6, L = 2 + r() * 4;
+      g.append(svg('line', { x1: f(x), y1: f(y), x2: f(x + L * Math.cos(a)), y2: f(y + L * Math.sin(a)), 'stroke-width': f(0.6 + r() * 0.8), opacity: f(0.35 + r() * 0.6) }));
     }
-    const moon = svg('g', { fill: 'none', stroke: MOON, 'stroke-width': 1, 'stroke-linecap': 'round', opacity: 0.8, transform: 'translate(800 90) rotate(-20)' });
-    moon.append(svg('path', { d: 'M0 -34A34 34 0 1 0 0 34A26 34 0 0 1 0 -34Z' }));
-    for (let y = -26; y <= 26; y += 6.5) {
-      const outer = -Math.sqrt(34 * 34 - y * y), inner = -26 * Math.sqrt(1 - (y * y) / (34 * 34));
-      moon.append(svg('path', { d: `M${f(outer + 1.5)} ${f(y)}L${f(inner - 1.5)} ${f(y + 2)}`, 'stroke-width': 0.6 }));
-    }
-    sky.append(moon);
+    $('flock').append(g);
   })();
 
-  /* ---------- a strip of film, one frame per pastime ---------- */
   (() => {
-    const r = rng(64), film = $('film');
-    const g = svg('g', { fill: 'none', stroke: MOON, 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-    const wobble = (y) => { let d = `M0 ${y}`; for (let x = 50; x <= 700; x += 50) d += `L${x} ${f(y + (r() - 0.5) * 1.6)}`; return d; };
-    g.append(svg('path', { d: wobble(8) }), svg('path', { d: wobble(182) }));
-    for (let x = 10; x < 690; x += 26) {
-      g.append(svg('rect', { x: f(x), y: 17, width: 13, height: 11, rx: 2.5, 'stroke-width': 0.9 }), svg('rect', { x: f(x), y: 162, width: 13, height: 11, rx: 2.5, 'stroke-width': 0.9 }));
+    const r = rng(13); let d = '';
+    for (let x = 0; x < 1000; x += 1.2 + r() * 3) {
+      const h = 18 + r() * 52, lean = (r() - 0.5) * 16;
+      d += `M${f(x)} 90Q${f(x + lean * 0.2)} ${f(90 - h * 0.6)} ${f(x + lean)} ${f(90 - h)}`;
     }
-    const frames = [
-      // an open book
-      '<path d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path d="M40 24V64"/><path d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>',
-      // a dumbbell
-      '<path d="M22 40H58"/><path d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path d="M8 32h5v16H8zM67 32h5v16h-5z"/>',
-      // a pair of notes
-      '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>',
-      // a tub of popcorn
-      '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>',
-    ];
-    frames.forEach((inner, i) => {
-      const x = 20 + i * 168;
-      g.append(svg('rect', { x, y: 42, width: 156, height: 106, rx: 4 }));
-      const d = svg('g', { transform: `translate(${x + 78 - 46} ${95 - 46}) scale(1.15)` });
-      d.innerHTML = inner;
-      g.append(d);
+    $('grass').append(svg('path', { d, fill: 'none', stroke: '#5f7450', 'stroke-width': 0.6, opacity: 0.8, 'vector-effect': 'non-scaling-stroke' }));
+  })();
+
+  /* ---------- skills: a row of keys per category ---------- */
+  SKILLS.forEach(([title, skills], cat) => {
+    const r = rng(40 + cat * 7);
+    const row = el('ul');
+    skills.forEach((skill) => {
+      const li = el('li', { className: 'key', textContent: skill });
+      li.style.setProperty('--r', `${f((r() - 0.5) * 3.2)}deg`);
+      row.append(li);
     });
-    film.append(g);
+    $('keys').append(el('div', { className: `keyrow s${cat} reveal` }, el('h3', { textContent: title }), row));
+  });
+
+  /* ---------- about: a tune written out by hand ---------- */
+  (() => {
+    const r = rng(64), staff = $('staff');
+    const lines = svg('g', { fill: 'none', stroke: INK, 'stroke-width': 0.7, opacity: 0.75 });
+    const drift = (x) => 6 * Math.sin(x / 190) + 3 * Math.sin(x / 67); // the whole staff wanders a little
+    for (let k = 0; k < 5; k++) {
+      let d = '';
+      for (let x = 0; x <= 1200; x += 30) d += `${x ? 'L' : 'M'}${x} ${f(34 + k * 9 + drift(x) + (r() - 0.5) * 0.8)}`;
+      lines.append(svg('path', { d }));
+    }
+    // scale steps above the bottom line, and how long each is held
+    const tune = [[1, 1], [3, 1], [5, 2], [6, 1], [5, 1], [3, 2], [2, 1], [3, 1], [5, 1], [8, 1], [6, 2], [5, 2],
+                  [8, 1], [6, 1], [5, 2], [3, 1], [2, 1], [1, 2], [2, 1], [3, 1], [5, 1], [3, 1], [2, 2], [1, 4]];
+    const notes = svg('g', { stroke: INK, 'stroke-width': 1.1, 'stroke-linecap': 'round' });
+    let x = 26, i = 0, prev = null;
+    while (x < 1185) {
+      const [step, beats] = tune[i % tune.length];
+      const y = 70 - step * 4.5 + drift(x), up = step < 5, red = i % 11 === 4;
+      const sx = up ? x + 4.2 : x - 4.2, sy = up ? y - 26 : y + 26, col = red ? RED : INK;
+      notes.append(
+        svg('ellipse', { cx: f(x), cy: f(y), rx: 4.6, ry: 3.3, transform: `rotate(-22 ${f(x)} ${f(y)})`, fill: beats >= 2 ? 'none' : col, stroke: col }),
+        svg('line', { x1: f(sx), y1: f(y), x2: f(sx), y2: f(sy), stroke: col }));
+      // tie two quick notes that lean the same way
+      if (prev && prev.beats === 1 && beats === 1 && prev.up === up && !prev.tied && !red && !prev.red) {
+        notes.append(svg('line', { x1: f(prev.sx), y1: f(prev.sy), x2: f(sx), y2: f(sy), 'stroke-width': 2.6 }));
+        prev = { tied: true };
+      } else prev = { sx, sy, up, beats, red };
+      if ((i + 1) % 8 === 0) notes.append(svg('line', { x1: f(x + 17), y1: f(34 + drift(x + 17)), x2: f(x + 17), y2: f(70 + drift(x + 17)), 'stroke-width': 0.7, opacity: 0.6 }));
+      x += 22 + beats * 9;
+      i++;
+    }
+    staff.append(lines, notes);
+  })();
+
+  /* ---------- small paper notes, one per pastime ---------- */
+  (() => {
+    const doodles = [
+      ['reading', '<path d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path d="M40 24V64"/><path d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>'],
+      ['gymming', '<path d="M22 40H58"/><path d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path d="M8 32h5v16H8zM67 32h5v16h-5z"/>'],
+      ['making music', '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>'],
+      ['the movies', '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>'],
+    ];
+    doodles.forEach(([label, inner], i) => {
+      const r = rng(700 + i * 29);
+      const paper = el('div', {}, art('0 0 80 80', `<g fill="none" stroke="${INK}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`));
+      let poly = '';
+      for (let k = 0; k <= 8; k++) poly += `${f(k * 12.5)}% ${f(r() * 3)}%,`;
+      for (let k = 1; k <= 5; k++) poly += `${f(100 - r() * 3)}% ${k * 20}%,`;
+      for (let k = 8; k >= 0; k--) poly += `${f(k * 12.5)}% ${f(100 - r() * 3)}%,`;
+      for (let k = 4; k >= 1; k--) poly += `${f(r() * 3)}% ${k * 20}%,`;
+      paper.style.clipPath = `polygon(${poly.slice(0, -1)})`;
+      const li = el('li', { className: 'scrap reveal' }, el('div', { className: 'sheet' }, paper), label);
+      li.style.transform = `rotate(${f((r() - 0.5) * 7)}deg)`;
+      $('notes').append(li);
+    });
+  })();
+
+  /* ---------- a grove growing up from the bottom edge ---------- */
+  (() => {
+    const grove = $('grove'), petals = ['#3f7d78', '#a97b22', RED, '#7d8f5c'];
+    [[90, 62, 21], [330, 88, 4], [560, 70, 33], [800, 96, 12], [1060, 74, 27]].forEach(([x0, len, seed], t) => {
+      const r = rng(seed * 97 + 5), wood = {}, leaf = petals.map(() => '');
+      const grow = (x, y, ang, L, depth) => {
+        const x2 = x + Math.cos(ang) * L, y2 = y + Math.sin(ang) * L, bend = (r() - 0.5) * L * 0.5;
+        wood[depth] = (wood[depth] || '') + `M${f(x)} ${f(y)}Q${f((x + x2) / 2 + bend)} ${f((y + y2) / 2 + bend * 0.3)} ${f(x2)} ${f(y2)}`;
+        if (depth === 0) {
+          const c = Math.floor(r() * petals.length), n = 3 + Math.floor(r() * 3);
+          for (let k = 0; k < n; k++) {
+            const a = (k / n) * Math.PI * 2 + r(), P = 2 + r() * 3;
+            leaf[c] += `M${f(x2)} ${f(y2)}l${f(P * Math.cos(a))} ${f(P * Math.sin(a))}`;
+          }
+          return;
+        }
+        const kids = r() < 0.3 ? 3 : 2;
+        for (let k = 0; k < kids; k++) {
+          // branches reach outward and up, never straight back down
+          const a = Math.max(-2.9, Math.min(-0.25, ang + (k - (kids - 1) / 2) * 0.72 + (r() - 0.5) * 0.5));
+          grow(x2, y2, a, L * (0.7 + r() * 0.12), depth - 1);
+        }
+      };
+      grow(x0, 470, -Math.PI / 2 + (r() - 0.5) * 0.35, len, 7);
+      const g = svg('g', { class: 'sway', fill: 'none', 'stroke-linecap': 'round' });
+      g.style.animationDelay = `${-t * 1.7}s`;
+      Object.keys(wood).forEach((d) => g.append(svg('path', { d: wood[d], stroke: '#6a5b57', 'stroke-width': f(0.4 + d * 0.36) })));
+      leaf.forEach((d, c) => g.append(svg('path', { d, stroke: petals[c], 'stroke-width': 0.9, opacity: 0.75 })));
+      grove.append(g);
+    });
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
@@ -268,7 +331,7 @@
   }, { passive: true });
 
   let resizeT;
-  const relayout = () => { code(); layThread(); };
+  const relayout = () => { asemic(); layThread(); };
   addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(relayout, 150); });
   addEventListener('load', relayout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layThread);
