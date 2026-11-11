@@ -1,8 +1,9 @@
 # Jason Johnson — portfolio
 
-One portfolio, drawn three ways; a small switcher at the bottom of each page flips between them. Plain HTML, CSS and JavaScript — no build step.
+The live site is the page at the root. Earlier versions and ideas pages are kept alongside it, unlinked; `all/` lists them. Plain HTML, CSS and JavaScript — no build step.
 
-- `index.html` — landing page linking to all three versions
+- `index.html` — the site itself (the sunset to sea version); its script and styles live in `story-e/`
+- `all/` — an unlinked page listing every version and ideas page, for comparing
 - `thread/` — the working version: a pen line runs from a sketched J through a field of writing, a night-sky constellation for work with a shooting star or rocket travelling along it, index cards for side projects, a keyboard of skills, and a winter shore under a line of music that plays as the page scrolls
 - `skills/` — a scratch page with five alternative drawings of the skills section (islands, growth rings, tags on a line, a pressed garden, a record sleeve)
 - `story-e/` — the current direction, one story top to bottom: stars, a sunset where each side project is its own small constellation, a sea whose waves are the music staff, a beach of skills; builds on the pen line styles

@@ -1,4 +1,5 @@
 (() => {
+  const HERE = document.currentScript.src; // media lives one level above this script
   const $ = (id) => document.getElementById(id);
   const el = (tag, props = {}, ...kids) => {
     const n = Object.assign(document.createElement(tag), props);
@@ -437,7 +438,7 @@
   let media = [], at = 0, current = null;
   const show = (i) => {
     at = (i + media.length) % media.length;
-    const src = '../' + media[at];
+    const src = new URL('../' + media[at], HERE).href;
     const node = src.endsWith('.mp4')
       ? el('video', { src, autoplay: true, loop: true, muted: true, playsInline: true })
       : el('img', { src, alt: `${current.title} screenshot ${at + 1}` });
