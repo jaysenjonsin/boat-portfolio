@@ -100,6 +100,12 @@
   /* ---------- shared pen settings for the small drawings ---------- */
   const line = `fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"`;
   const accent = `fill="none" stroke="${RED}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
+  // the drawing, title and text of an entry open it too; the "open" button stays for keyboards and screen readers
+  const wholeEntry = (li, p) => {
+    li.classList.add('opens');
+    li.addEventListener('click', (e) => { if (!e.target.closest('button, a')) openLog(p.id); });
+    return li;
+  };
   const moreBtn = (p) => {
     const b = el('button', { className: 'more', type: 'button', textContent: 'open' });
     b.setAttribute('aria-label', `Open ${p.title}`);
@@ -120,12 +126,12 @@
       for (let j = 0; j < 4; j++) { const a = (j / 4) * Math.PI + 0.3, L = j % 2 ? big * 0.55 : big; rays += `M${f(-L * Math.cos(a))} ${f(-L * Math.sin(a))}L${f(L * Math.cos(a))} ${f(L * Math.sin(a))}`; }
       const star = art('-16 -16 32 32', `<path d="${rays}" fill="none" stroke="${MOON}" stroke-width="1" stroke-linecap="round"/><circle r="2.4" fill="${k ? MOON : '#e8a08f'}"/>`);
       star.classList.add('star');
-      $('jobs').append(el('li', { className: 'job reveal' }, star,
+      $('jobs').append(wholeEntry(el('li', { className: 'job reveal' }, star,
         el('div', {},
           el('p', { className: 'year', textContent: p.year }),
           el('h3', { textContent: p.title }),
           el('p', { textContent: p.description }),
-          moreBtn(p))));
+          moreBtn(p))), p));
     });
 
     // both travellers are drawn pointing right, then turned to face along the line
@@ -194,12 +200,12 @@
           ? `<path d="M${x - 6} ${y}h12M${x} ${y - 6}v12M${x - 3.5} ${y - 3.5}l7 7M${x + 3.5} ${y - 3.5}l-7 7" fill="none" stroke="${MOON}" stroke-width=".9" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="2.2" fill="#e8a08f"/>`
           : `<circle cx="${x}" cy="${y}" r="${f(1.4 + r() * 1.2)}" fill="${MOON}"/>`;
       });
-      $('figures').append(el('li', { className: 'reveal' },
+      $('figures').append(wholeEntry(el('li', { className: 'reveal' },
         art('0 0 100 96', s),
         el('p', { className: 'year', textContent: p.year }),
         el('h3', { textContent: p.title }),
         el('p', { textContent: p.description }),
-        moreBtn(p)));
+        moreBtn(p)), p));
     });
   })();
 

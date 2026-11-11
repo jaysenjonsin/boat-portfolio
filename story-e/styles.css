@@ -85,7 +85,7 @@
 
 /* about pictures: each inks itself in above the waterline, then its reflection settles beneath */
 .pool:nth-child(even) { margin-top: 2.5rem; }
-.pool svg { display: block; width: 100%; max-width: 8rem; height: auto; margin: 0 auto; overflow: visible; }
+.pool svg { display: block; width: 100%; max-width: 5.6rem; height: auto; margin: 0 auto; overflow: visible; }
 .pool .fig :is(path, ellipse) { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .pool.in .fig :is(path, ellipse) { animation: sketch 1.8s cubic-bezier(.6, .05, .25, 1) .2s forwards; }
 .pool.in .fig :is(path, ellipse):nth-child(2) { animation-delay: .55s; }
@@ -96,3 +96,10 @@
 .pool.in .refl { opacity: .42; }
 @media (max-width: 640px) { .pool:nth-child(even) { margin-top: 1.5rem; } }
 @media (prefers-reduced-motion: reduce) { .pool .fig :is(path, ellipse) { stroke-dashoffset: 0; } .pool .water { opacity: .8; } .pool .refl { opacity: .42; } }
+
+/* a whole work or project entry is clickable */
+.opens { cursor: pointer; }
+.opens h3 { text-decoration: underline dashed transparent 1px; text-underline-offset: .3em; transition: text-decoration-color .2s ease; }
+.opens:hover h3 { text-decoration-color: currentColor; }
+.opens svg { transition: transform .25s ease; }
+.opens:hover svg { transform: scale(1.08); }
