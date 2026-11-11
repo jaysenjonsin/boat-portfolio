@@ -300,59 +300,46 @@
     });
   })();
 
-  /* ---------- a cold shore: ice, penguins, a fox ---------- */
+  /* ---------- a cold shore, in outline: two bergs, three penguins, a fox ---------- */
   (() => {
-    const r = rng(58), SNOW = '#fcf9f1', ICE = '#dce7ea', BEAK = '#d98a2b';
-    const pen = `stroke="${INK}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"`;
+    const SKY = '#efe0d6';
+    const pen = `stroke="${INK}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"`;
+    // small and far off: a dark back, a pale front, a speck of beak
     const penguin = (x, y, s, dir) => `
-      <g transform="translate(${x} ${y}) scale(${s * dir} ${s})"><g>
-        <path d="M-9 20l-7 5M9 20l7 5" fill="none" stroke="${BEAK}" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M0 -62C17 -62 24 -32 22 0C21 14 12 21 0 21C-12 21 -21 14 -22 0C-24 -32 -17 -62 0 -62Z" fill="${INK}" ${pen}/>
-        <path d="M4 -46C14 -44 17 -22 15 0C14 10 9 16 1 16C-7 16 -12 10 -12 0C-12 -20 -8 -40 4 -46Z" fill="${SNOW}"/>
-        <path d="M14 -53l13 4-13 4Z" fill="${BEAK}" stroke="${BEAK}" stroke-width="1" stroke-linejoin="round"/>
-        <circle cx="8" cy="-52" r="1.7" fill="${SNOW}"/>
-        <path d="M-21 -30q-9 16 -5 32M21 -28q8 14 5 28" fill="none" stroke="${INK}" stroke-width="3.4" stroke-linecap="round"/>
-      </g></g>`;
-    let hatch = '';
-    [[150, 232, 196, 318], [612, 214, 660, 322], [1010, 250, 1046, 320]].forEach(([x1, y1, x2, y2]) => {
-      for (let k = 1; k < 7; k++) { const t = k / 7; hatch += `M${f(x1 + (x2 - x1) * t)} ${f(y1 + (y2 - y1) * t)}l${f(-(8 + r() * 14) * (1.2 - t))} ${f(4 + r() * 5)}`; }
-    });
-    let snow = '';
-    for (let k = 0; k < 22; k++) snow += `<circle class="snow" cx="${f(r() * 1200)}" cy="${f(r() * 300)}" r="${f(1 + r() * 1.6)}" fill="${SNOW}" style="animation-delay:${f(-r() * 16)}s"/>`;
+      <g transform="translate(${x} ${y}) scale(${s * dir} ${s})">
+        <path d="M0 -62C15 -62 22 -34 20 -2C19 12 11 20 0 20C-11 20 -19 12 -20 -2C-22 -34 -15 -62 0 -62Z" fill="${INK}"/>
+        <path d="M5 -44C14 -40 16 -20 14 -2C13 8 8 14 2 14C-5 14 -9 8 -9 -2C-9 -20 -5 -40 5 -44Z" fill="${SKY}"/>
+        <path d="M13 -54l11 4-11 3Z" fill="#c98a3a"/>
+        <path d="M-6 20l-5 4M6 20l5 4" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round"/>
+      </g>`;
     let prints = '';
-    for (let k = 0; k < 9; k++) prints += `<ellipse cx="${f(742 - k * 26)}" cy="${f(396 + Math.sin(k * 0.8) * 5 + (k % 2) * 5)}" rx="3" ry="1.6" fill="${INK}" opacity=".3"/>`;
+    for (let k = 0; k < 7; k++) prints += `<ellipse cx="${f(752 - k * 24)}" cy="${f(394 + Math.sin(k * 0.8) * 4 + (k % 2) * 4)}" rx="2.6" ry="1.3" fill="${INK}" opacity=".25"/>`;
     $('arctic').innerHTML = `
-      <circle cx="930" cy="120" r="34" fill="${SNOW}" opacity=".75"/>
-      <g fill="${ICE}" ${pen}>
-        <path d="M40 330L96 262 150 232 196 318 232 286 268 330Z"/>
-        <path d="M500 330L548 268 612 214 660 322 700 296 728 330Z"/>
-        <path d="M930 330L968 280 1010 250 1046 320 1078 300 1100 330Z"/>
+      <g fill="${SKY}" ${pen} stroke-width="1">
+        <path d="M500 331L548 268 612 214 660 322 700 296 728 330"/>
+        <path d="M70 336L118 290 160 262 196 322 222 304 244 334"/>
       </g>
-      <path d="${hatch}" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".55"/>
-      <path d="M0 338Q150 312 330 330T700 326 1010 322 1200 336V460H0Z" fill="${SNOW}" ${pen} stroke-width="1"/>
-      <path d="M120 356q40 -6 84 0M430 350q30 -5 66 0M880 348q44 -6 92 0M1080 372q30 -4 60 0" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".4"/>
-      ${penguin(214, 372, 0.8, 1)}${penguin(262, 384, 1, -1)}${penguin(322, 378, 0.72, 1)}
-      ${penguin(1010, 380, 0.9, -1)}${penguin(1060, 392, 0.62, -1)}
+      <path d="M612 214L628 300M160 262L172 312" fill="none" ${pen} stroke-width=".7" opacity=".5"/>
+      <path d="M0 338Q150 326 330 334T700 330 1010 328 1200 336" fill="none" ${pen} stroke-width="1"/>
+      ${penguin(250, 372, 0.36, 1)}${penguin(274, 375, 0.42, 1)}${penguin(300, 373, 0.3, 1)}${penguin(1010, 378, 0.34, -1)}
       ${prints}
-      <g transform="translate(748 302) scale(1.05)">
-        <path d="M86 92Q118 102 134 82Q144 64 126 56Q132 74 114 80Q98 84 86 80Z" fill="${SNOW}" ${pen}/>
-        <path d="M22 52L8 48Q4 44 11 41L24 34 23 16 35 27Q41 25 46 28L55 17 56 36Q61 46 57 56Q80 60 88 78Q93 90 90 100H38Q43 88 39 77Q34 64 22 52Z" fill="${SNOW}" ${pen}/>
+      <g transform="translate(760 318) scale(.82)">
+        <path d="M86 92Q118 102 134 82Q144 64 126 56Q132 74 114 80Q98 84 86 80Z" fill="${SKY}" ${pen}/>
+        <path d="M22 52L8 48Q4 44 11 41L24 34 23 16 35 27Q41 25 46 28L55 17 56 36Q61 46 57 56Q80 60 88 78Q93 90 90 100H38Q43 88 39 77Q34 64 22 52Z" fill="${SKY}" ${pen}/>
         <path d="M54 78Q50 90 52 100M66 100Q64 92 70 86" fill="none" ${pen} stroke-width="1"/>
-        <circle cx="8.5" cy="45" r="2" fill="${INK}"/><path d="M22 40q3 -2 6 0" fill="none" ${pen}/>
-        <path d="M27 20l3 8M52 22l-2 8" fill="none" ${pen} stroke-width=".8" opacity=".6"/>
-      </g>
-      <path d="M0 418Q260 392 560 414T1200 408V460H0Z" fill="#f5f0e4"/>
-      ${snow}`;
-    // on narrow screens, frame the penguins and the fox instead of cropping to the middle
+        <circle cx="8.5" cy="45" r="1.8" fill="${INK}"/><path d="M22 40q3 -2 6 0" fill="none" ${pen}/>
+      </g>`;
+    // on narrow screens, frame the animals instead of cropping to the middle
     const narrow = matchMedia('(max-width: 640px)');
-    const frame = () => $('arctic').setAttribute('viewBox', narrow.matches ? '170 130 740 330' : '0 0 1200 460');
+    const frame = () => $('arctic').setAttribute('viewBox', narrow.matches ? '190 150 740 310' : '0 0 1200 460');
     narrow.addEventListener('change', frame);
     frame();
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
   const thread = $('thread'), pen = thread.querySelector('path');
-  let total = 0;
+  let total = 0, reach = [], drawn = 0, goal = 0, easing = false;
+  const STEP = 6;
   const anchor = (node, [vx, vy]) => {
     const b = node.getBoundingClientRect(), s = b.width / 280;
     return [b.left + vx * s, b.top + scrollY + vy * s];
@@ -376,29 +363,32 @@
     pen.setAttribute('d', d);
     total = pen.getTotalLength();
     pen.style.strokeDasharray = total;
+    // how far down the page the line has reached at each step along it (never decreasing, so the
+    // loop near the end doesn't make the drawn length jump)
+    reach = [];
+    let deepest = -Infinity;
+    for (let l = 0; l <= total; l += STEP) { deepest = Math.max(deepest, pen.getPointAtLength(l).y); reach.push(deepest); }
+    drawn = Math.min(drawn, total);
     pull();
   };
   const pull = () => {
-    // the line is drawn down to a point a little past mid-screen
+    // aim to have the line drawn down to a point a little past mid-screen
     const max = document.documentElement.scrollHeight - innerHeight, frac = max > 0 ? Math.min(1, scrollY / max) : 1;
-    let len = total;
-    if (!still && frac < 0.995) {
-      const targetY = scrollY + innerHeight * (0.45 + 0.5 * frac);
-      let lo = 0, hi = total;
-      for (let k = 0; k < 18; k++) {
-        const mid = (lo + hi) / 2;
-        if (pen.getPointAtLength(mid).y < targetY) lo = mid; else hi = mid;
-      }
-      len = lo;
-    }
-    pen.style.strokeDashoffset = total - len;
+    const targetY = scrollY + innerHeight * (0.5 + 0.45 * frac);
+    let lo = 0, hi = reach.length - 1;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (reach[m] < targetY) lo = m + 1; else hi = m; }
+    goal = still || reach[lo] < targetY ? total : lo * STEP;
+    if (still) { drawn = goal; pen.style.strokeDashoffset = total - drawn; return; }
+    if (!easing) { easing = true; requestAnimationFrame(ease); }
   };
-  let tick = false;
-  addEventListener('scroll', () => {
-    if (tick) return;
-    tick = true;
-    requestAnimationFrame(() => { pull(); tick = false; });
-  }, { passive: true });
+  // the pen catches up to its goal a little each frame, so nothing appears all at once
+  const ease = () => {
+    const gap = goal - drawn, stride = Math.sign(gap) * Math.min(Math.abs(gap), Math.max(1.5, Math.abs(gap) * 0.1));
+    drawn += stride;
+    pen.style.strokeDashoffset = total - drawn;
+    if (Math.abs(goal - drawn) > 0.5) requestAnimationFrame(ease); else easing = false;
+  };
+  addEventListener('scroll', pull, { passive: true });
 
   let resizeT;
   const relayout = () => { asemic(); layThread(); };

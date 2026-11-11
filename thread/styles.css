@@ -158,10 +158,7 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .scrap:nth-child(even) { margin-top: 2.5rem; }
 .scrap .sheet div { background: var(--edge); padding: 1.1rem .8rem; }
 .scrap svg { display: block; width: 100%; max-width: 5rem; height: auto; margin: 0 auto; overflow: visible; }
-.arctic { display: block; width: 100%; height: 26rem; margin-top: 1rem; }
-.arctic .snow { animation: fall 16s linear infinite; }
-@keyframes fall { from { transform: translateY(-40px); opacity: 0; } 15%, 80% { opacity: .8; } to { transform: translateY(120px); opacity: 0; } }
-
+.arctic { display: block; width: 100%; height: 22rem; margin-top: 1rem; }
 /* hello */
 .hello { text-align: center; padding: 9rem 0 2.5rem; }
 .hello h2 { margin-bottom: 1rem; }
@@ -209,7 +206,7 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
   .keyrow:nth-child(n) { padding-left: 0; }
   .notes { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; padding: 0 1.5rem; }
   .scrap:nth-child(even) { margin-top: 1.5rem; }
-  .arctic { height: auto; aspect-ratio: 740 / 330; }
+  .arctic { height: auto; aspect-ratio: 740 / 310; }
   .key { min-width: 3rem; height: 3.1rem; padding: 0 .65rem .25rem; font-size: 1rem; }
   #asemic { height: 24rem; }
 }
