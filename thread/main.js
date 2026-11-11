@@ -302,6 +302,11 @@
       </g>
       <path d="M0 418Q260 392 560 414T1200 408V460H0Z" fill="#f5f0e4"/>
       ${snow}`;
+    // on narrow screens, frame the penguins and the fox instead of cropping to the middle
+    const narrow = matchMedia('(max-width: 640px)');
+    const frame = () => $('arctic').setAttribute('viewBox', narrow.matches ? '170 130 740 330' : '0 0 1200 460');
+    narrow.addEventListener('change', frame);
+    frame();
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */

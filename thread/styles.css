@@ -200,7 +200,7 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
   .keyrow:nth-child(n) { padding-left: 0; }
   .notes { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; padding: 0 1.5rem; }
   .scrap:nth-child(even) { margin-top: 1.5rem; }
-  .arctic { height: 20rem; }
+  .arctic { height: auto; aspect-ratio: 740 / 330; }
   .key { min-width: 3rem; height: 3.1rem; padding: 0 .65rem .25rem; font-size: 1rem; }
   #asemic { height: 24rem; }
 }
