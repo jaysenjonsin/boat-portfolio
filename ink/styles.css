@@ -75,7 +75,7 @@ h3 { font-weight: 500; margin: 0; }
 .draw.in :is(path, ellipse):nth-child(4) { animation-delay: 1s; }
 .enso.in-now :is(path, ellipse) { animation-duration: 2.6s; animation-delay: .3s; }
 .enso.in :is(path, ellipse) { animation-delay: 0s !important; }
-.seal { opacity: 0; transform-origin: 150px 152px; }
+.seal { opacity: 0; transform-origin: 118px 130px; }
 .in .seal, .in-now .seal { animation: stamp .5s 2.4s cubic-bezier(.3,1.6,.5,1) forwards; }
 @keyframes ink { to { stroke-dashoffset: 0; } }
 @keyframes stamp { from { opacity: 0; transform: scale(2.4); } to { opacity: 1; transform: scale(1); } }
@@ -151,9 +151,6 @@ h3 { font-weight: 500; margin: 0; }
 .ashore h2 { margin-bottom: 1rem; }
 .doodles { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; font-family: var(--hand); font-size: 1rem; }
 .doodles svg { width: 4.5rem; height: auto; display: block; margin: 0 auto .4rem; overflow: visible; }
-.melody { background: none; border: 0; padding: 0; color: inherit; font-size: 1rem; cursor: pointer; }
-.melody em { display: block; font-style: normal; font-size: .85rem; color: var(--red); text-decoration: underline wavy; text-underline-offset: 4px; }
-.melody[aria-pressed="true"] em { color: var(--ink-soft); }
 
 /* hello */
 .hello { padding: 6rem 0 2rem; text-align: center; }

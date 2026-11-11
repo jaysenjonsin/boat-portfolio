@@ -3,7 +3,7 @@
 One portfolio, drawn two ways. Plain HTML, CSS and JavaScript — no build step.
 
 - `index.html` — landing page linking to both versions
-- `thread/` — a single thread running through scribbled writing, torn paper bands, a stitched skills sampler and a night scene
+- `thread/` — a single pen line running from a sketched J through hand-drawn code, job sketches, index cards, a bookshelf of skills and a strip of film
 - `ink/` — brush ink on paper: a voyage through work, lanterns for side projects, constellations for skills
 - `projects.js` — all content (work, projects, skills), shared by both versions
 - `projects/` — screenshots and clips

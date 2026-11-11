@@ -11,79 +11,78 @@
     for (const k in attrs) n.setAttribute(k, attrs[k]);
     return n;
   };
-  const newSvg = (viewBox) => svg('svg', { viewBox, 'aria-hidden': 'true' });
+  const art = (viewBox, inner) => {
+    const s = svg('svg', { viewBox, 'aria-hidden': 'true' });
+    s.innerHTML = inner;
+    return s;
+  };
   // seeded random, so every drawing is the same on each visit
   const rng = (seed) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
   const f = (n) => n.toFixed(1);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const INK = '#2a2622', RED = '#c9483a', CREAM = '#e9e2d2';
+  const INK = '#25272e', RED = '#d1492e', PEN = '#3c5a94', OCHRE = '#a97b22', TEAL = '#3f7d78', MOON = '#e8e3d4';
 
-  /* ---------- the circle of marks ---------- */
-  const enso = (node, seed, gapDeg) => {
+  /* ---------- the J, sketched over a few passes of the pen ---------- */
+  // Hook ends near (62, 168) and the bar starts near (96, 60) in the mark's 280 x 270 box.
+  const MARK_TAIL = [62, 168], MARK_HEAD = [96, 60];
+  const sketchJ = (node, seed) => {
     const r = rng(seed);
-    const from = -60 + gapDeg, to = 300, step = 2.1;
-    for (let a = from, i = 0; a <= to; a += step, i++) {
-      const t = (a * Math.PI) / 180;
-      const rad = 112 + 5 * Math.sin(t * 2 + 1) + 3 * Math.sin(t * 5) + (r() - 0.5) * 3;
-      const x = 150 + rad * Math.cos(t), y = 150 + rad * Math.sin(t);
-      const taper = Math.min(1, (a - from) / 30, (to - a) / 60 + 0.35);
-      const bead = svg('ellipse', {
-        class: 'bead', cx: f(x), cy: f(y), rx: f((2.2 + r() * 2.2) * taper), ry: f((1.6 + r() * 1.6) * taper),
-        transform: `rotate(${f(a + 90 + (r() - 0.5) * 40)} ${f(x)} ${f(y)})`, fill: INK,
+    for (let pass = 0; pass < 5; pass++) {
+      const dx = (r() - 0.5) * 5, dy = (r() - 0.5) * 5, dr = (r() - 0.5) * 6, rad = 52 + dr;
+      const g = svg('g', {
+        fill: 'none', stroke: INK, 'stroke-width': pass ? 1.2 : 1.8, 'stroke-linecap': 'round', opacity: pass ? 0.75 : 1,
+        transform: `rotate(${f((r() - 0.5) * 3.5)} 140 135)`,
       });
-      bead.style.setProperty('--o', f(0.65 + r() * 0.35));
-      bead.style.animationDelay = `${i * 12}ms`;
-      node.append(bead);
-      if (i % 3 === 0) {
-        const sh = svg('circle', { class: 'bead', cx: f(x + 4), cy: f(y + 4), r: 0.9, fill: INK });
-        sh.style.setProperty('--o', '0.25');
-        sh.style.animationDelay = `${i * 12}ms`;
-        node.append(sh);
-      }
+      const bar = svg('path', { pathLength: 1, d: `M${f(96 + dx - r() * 8)} ${f(60 + dy)}Q${f(150 + dx)} ${f(57 + dy + (r() - 0.5) * 4)} ${f(214 + dx + r() * 8)} ${f(60 + dy)}` });
+      const stem = svg('path', {
+        pathLength: 1,
+        d: `M${f(166 + dx)} ${f(60 + dy - r() * 5)}V${f(182 + dy)}a${f(rad)} ${f(rad)} 0 0 1 ${f(-rad * 2)} 0v${f(-12 - r() * 8)}`,
+      });
+      bar.style.animationDelay = `${pass * 0.12}s`;
+      stem.style.animationDelay = `${0.35 + pass * 0.12}s`;
+      g.append(bar, stem);
+      node.append(g);
     }
-    const star = svg('g', { class: 'star', stroke: RED, 'stroke-width': 1, 'stroke-linecap': 'round' });
-    for (let k = 0; k < 4; k++) {
-      const t = (k * Math.PI) / 4 + 0.2, L = 8 + r() * 3;
-      star.append(svg('line', { x1: f(150 - L * Math.cos(t)), y1: f(150 - L * Math.sin(t)), x2: f(150 + L * Math.cos(t)), y2: f(150 + L * Math.sin(t)) }));
-    }
-    node.append(star);
+    node.append(svg('circle', { class: 'dot', cx: 118, cy: 112, r: 6, fill: RED }));
   };
-  enso($('enso-top'), 7, 38);
-  enso($('enso-end'), 23, 12);
+  sketchJ($('mark-top'), 7);
+  sketchJ($('mark-end'), 23);
 
-  /* ---------- field of writing, with room left for the code ---------- */
-  const asemic = () => {
-    const c = $('asemic'), dpr = Math.min(devicePixelRatio || 1, 2);
+  /* ---------- a page of code, as the hand remembers it ---------- */
+  const code = () => {
+    const c = $('code'), dpr = Math.min(devicePixelRatio || 1, 2);
     const W = c.clientWidth, H = c.clientHeight;
     c.width = W * dpr; c.height = H * dpr;
     const g = c.getContext('2d');
     g.scale(dpr, dpr);
-    // mask: a pair of braces left blank in the middle of the page
-    const m = el('canvas', { width: W, height: H }).getContext('2d', { willReadFrequently: true });
-    const size = Math.min(H * 0.8, W * 0.55);
-    m.font = `${size}px Georgia, serif`; m.textAlign = 'center'; m.textBaseline = 'middle';
-    m.lineWidth = size * 0.09; m.lineJoin = 'round';
-    m.strokeText('{ }', W / 2, H / 2); m.fillText('{ }', W / 2, H / 2);
-    const mask = m.getImageData(0, 0, W, H).data;
-    const blank = (x, y) => mask[((y | 0) * W + (x | 0)) * 4 + 3] > 40;
-    const r = rng(42);
-    const colW = Math.min(W, 760), x0 = (W - colW) / 2;
-    g.lineWidth = 0.7; g.lineCap = 'round';
-    for (let y = 10; y < H - 4; y += 8.5) {
-      const fade = Math.min(1, y / 70); // the writing thickens as it starts
-      let x = x0 + r() * 12;
-      while (x < x0 + colW - 10) {
-        const len = 8 + r() * 34;
-        if (r() < fade && !blank(x, y) && !blank(x + len / 2, y) && !blank(x + len, y)) {
-          g.strokeStyle = r() < 0.025 ? RED : INK;
-          g.globalAlpha = 0.3 + r() * 0.55;
-          g.beginPath(); g.moveTo(x, y);
-          for (let i = 2.5; i < len; i += 2.5) g.lineTo(x + i, y + (r() - 0.5) * 5.5);
-          g.stroke();
-        }
-        x += len + 4 + r() * 5;
+    g.lineCap = 'round';
+    const r = rng(42), colW = Math.min(W - 32, 620), x0 = (W - colW) / 2 + 26;
+    const tints = [INK, INK, INK, INK, PEN, PEN, TEAL, OCHRE, RED];
+    let indent = 0, row = 0;
+    for (let y = 16; y < H - 10; y += 13, row++) {
+      const edge = Math.min(1, y / 90, (H - y) / 90);
+      // gutter tick, like a line number
+      g.globalAlpha = 0.3 * edge; g.strokeStyle = INK; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(x0 - 24, y); g.lineTo(x0 - 24 + 4 + (row % 10 > 8 ? 5 : 0), y); g.stroke();
+      if (r() < 0.12) { continue; } // a blank line
+      const step = r();
+      if (step < 0.3 && indent < 5) indent++;
+      else if (step > 0.72 && indent > 0) indent -= r() < 0.3 ? Math.min(indent, 2) : 1;
+      let x = x0 + indent * 22;
+      const words = 1 + Math.floor(r() * (6 - indent * 0.6));
+      for (let w = 0; w < words && x < x0 + colW - 60; w++) {
+        const len = 8 + r() * (w === 0 ? 30 : 58);
+        g.strokeStyle = tints[Math.floor(r() * tints.length)];
+        g.globalAlpha = (0.45 + r() * 0.45) * edge;
+        g.lineWidth = 2.1;
+        g.beginPath(); g.moveTo(x, y + (r() - 0.5));
+        for (let i = 6; i < len; i += 6) g.lineTo(x + i, y + (r() - 0.5) * 1.6);
+        g.lineTo(x + len, y + (r() - 0.5));
+        g.stroke();
+        x += len + 8;
       }
     }
+    g.globalAlpha = 1;
   };
 
   /* ---------- torn paper edges ---------- */
@@ -94,33 +93,32 @@
     let d = 'M0 28L0 14';
     for (let x = 0; x <= 1000; x += 6 + r() * 16) d += `L${f(x)} ${f(r() < 0.04 ? 3 + r() * 4 : 11 + r() * 6)}`;
     d += 'L1000 14L1000 28Z';
-    if (!t.closest('.dark')) t.append(svg('path', { d, fill: '#fbf8f0', transform: 'translate(0 -3)' }));
+    if (!t.closest('.night')) t.append(svg('path', { d, fill: '#fcf9f1', transform: 'translate(0 -3)' }));
     t.append(svg('path', { d, fill: 'currentColor' }));
   });
 
-  /* ---------- work: a blossoming branch for each job ---------- */
-  const branch = (seed) => {
-    const r = rng(seed), s = newSvg('0 0 130 130');
-    const wood = svg('g', { fill: 'none', stroke: '#6f5148', 'stroke-linecap': 'round' });
-    const bloom = svg('g');
-    const grow = (x, y, ang, len, depth) => {
-      const x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len;
-      const bend = (r() - 0.5) * len * 0.4;
-      wood.append(svg('path', {
-        d: `M${f(x)} ${f(y)}Q${f((x + x2) / 2 + bend)} ${f((y + y2) / 2)} ${f(x2)} ${f(y2)}`, 'stroke-width': f(0.35 + depth * 0.32),
-      }));
-      if (depth === 0) {
-        for (let k = 0; k < 3; k++) {
-          bloom.append(svg('circle', { cx: f(x2 + (r() - 0.5) * 7), cy: f(y2 + (r() - 0.5) * 7), r: f(0.9 + r() * 0.9), fill: r() < 0.6 ? '#d27f78' : '#8d9d6c', opacity: 0.85 }));
-        }
-        return;
+  /* ---------- work: a small sketch for each job ---------- */
+  const line = `fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"`;
+  const accent = `fill="none" stroke="${RED}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
+  const jobArt = {
+    // live numbers: bars with a pulse running over them
+    Chartbeat: `<g ${line}><path d="M9 88q40 2 83 -1"/><path d="M19 88v-17h9v17M34 88v-30h9v30M49 88v-23h9v23M64 88v-42h9v42M79 88v-33h9v33"/></g>
+      <path ${accent} d="M6 40h20l6-20 9 36 7-27 5 11h41"/>`,
+    // a door left open
+    Glassdoor: `<g ${line}><path d="M27 91V13h46v78"/><path d="M27 13l31 9v78l-31-9"/><path d="M33 24l19 5v24l-19-4Z" stroke-width="1"/><path d="M12 91q40 3 78 0"/></g>
+      <circle cx="52" cy="62" r="2.2" fill="${RED}"/><g ${line} stroke-width=".8" opacity=".6"><path d="M64 30l6-3M64 46h7M64 62l6 3"/></g>`,
+    // people gathering around one point
+    Konvene: (() => {
+      const r = rng(9); let s = `<g ${line} stroke-width="1">`;
+      for (let k = 0; k < 9; k++) {
+        const a = (k / 9) * Math.PI * 2 + 0.3, d = 30 + r() * 10, x = 50 + d * Math.cos(a), y = 52 + d * Math.sin(a);
+        s += `<path d="M${f(x)} ${f(y)}L${f(50 + 9 * Math.cos(a))} ${f(52 + 9 * Math.sin(a))}" stroke-dasharray="1.5 4"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(2.6 + r() * 1.6)}" stroke-dasharray="none"/>`;
       }
-      const kids = r() < 0.35 ? 3 : 2;
-      for (let k = 0; k < kids; k++) grow(x2, y2, ang + (k - (kids - 1) / 2) * 0.62 + (r() - 0.5) * 0.45, len * (0.66 + r() * 0.14), depth - 1);
-    };
-    grow(65, 128, -Math.PI / 2 + (r() - 0.5) * 0.3, 30, 5);
-    s.append(wood, bloom);
-    return s;
+      return s + `</g><circle cx="50" cy="52" r="5" fill="${RED}"/>`;
+    })(),
+    // a pencil writing tests that pass
+    Scribe: `<g ${line}><path d="M72 12l12 10-44 50-15 5 3-15Z"/><path d="M64 21l12 10M28 62l12 10"/><path d="M12 90q6-8 12 0t12 0 12 0"/></g>
+      <path ${accent} d="M58 86l6 6 13-15"/>`,
   };
 
   const moreBtn = (p) => {
@@ -130,10 +128,10 @@
     return b;
   };
 
-  PROJECTS.filter((p) => p.category === 'work').forEach((p, i) => {
+  PROJECTS.filter((p) => p.category === 'work').forEach((p) => {
     $('jobs').append(
       el('li', { className: 'job reveal' },
-        branch(60 + i * 31),
+        art('0 0 100 100', jobArt[p.id] || `<circle cx="50" cy="50" r="30" ${line}/>`),
         el('div', {},
           el('p', { className: 'year', textContent: p.year }),
           el('h3', { textContent: p.title }),
@@ -142,216 +140,125 @@
     );
   });
 
-  /* ---------- projects: small drawings on paper scraps ---------- */
-  const glyphs = [
-    () => { // spiral
-      let d = '';
-      for (let t = 0; t < 22; t += 0.2) d += `${t ? 'L' : 'M'}${f(40 + t * 1.5 * Math.cos(t))} ${f(40 + t * 1.5 * Math.sin(t))}`;
-      return `<path d="${d}" fill="none" stroke="${RED}" stroke-width="1"/>`;
-    },
-    () => { // maze
-      let s = '';
-      [[8, '150 14'], [17, '40 10 200 0'], [26, '70 9 200 0'], [35, '14 8 200 0']].forEach(([o, dash]) => {
-        s += `<rect x="${o}" y="${o}" width="${80 - o * 2}" height="${80 - o * 2}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-dasharray="${dash}"/>`;
-      });
-      return s;
-    },
-    () => { // seed head
-      const r = rng(5); let s = `<path d="M40 44Q44 62 38 78" fill="none" stroke="${INK}" stroke-width="1"/>`;
-      for (let k = 0; k < 26; k++) {
-        const t = (k / 26) * Math.PI * 2, L = 18 + r() * 9;
-        s += `<line x1="40" y1="34" x2="${f(40 + L * Math.cos(t))}" y2="${f(34 + L * Math.sin(t))}" stroke="${INK}" stroke-width=".7"/>`;
-      }
-      return s + `<circle cx="40" cy="34" r="2.2" fill="${INK}"/>`;
-    },
-    () => { // orbits
-      let s = '';
-      [10, 19, 28, 36].forEach((rad) => { s += `<circle cx="40" cy="40" r="${rad}" fill="none" stroke="${INK}" stroke-width=".7"/>`; });
-      return s + `<circle cx="40" cy="40" r="2" fill="${INK}"/><circle cx="59" cy="40" r="2.4" fill="${RED}"/><circle cx="26" cy="64" r="1.8" fill="#b0842c"/><circle cx="34" cy="12" r="1.6" fill="${INK}"/>`;
-    },
-  ];
+  /* ---------- projects: index cards with a doodle each ---------- */
+  const cardArt = {
+    // a paper plane and the loop it just flew
+    Amelia: `<path d="M8 62c14 10 30 0 22-12-6-9-18 2-8 9" fill="none" stroke="${INK}" stroke-width="1" stroke-dasharray="2 4" stroke-linecap="round"/>
+      <g ${line}><path d="M24 44l48-26-18 46-9-16Z"/><path d="M45 48l27-30"/></g>`,
+    // a stack of flashcards
+    Knoted: `<g ${line} fill="#fcf9f1"><rect x="20" y="20" width="44" height="30" rx="2" transform="rotate(-9 42 35)"/><rect x="20" y="26" width="44" height="30" rx="2" transform="rotate(4 42 41)"/><rect x="18" y="34" width="44" height="30" rx="2"/></g>
+      <path ${accent} stroke-width="1.2" d="M25 44h22M25 51h30M25 57h14"/>`,
+    // a spark over a clipboard
+    Ignition: `<g ${line}><rect x="20" y="22" width="40" height="50" rx="3"/><path d="M32 22v-5h16v5"/><path d="M28 40h24M28 50h24M28 60h14"/></g>
+      <path ${accent} d="M66 10v9M66 31v9M51 25h9M72 25h9M56 15l5 5M76 15l-5 5M56 35l5-5M76 35l-5-5"/>`,
+    // a ticket stub
+    EventFinder: `<g ${line}><path d="M10 28h60v9a6 6 0 0 0 0 12v9H10v-9a6 6 0 0 0 0-12Z" transform="rotate(-8 40 43)"/><path d="M52 27v33" stroke-dasharray="2 4" transform="rotate(-8 40 43)"/></g>
+      <path ${accent} stroke-width="1.2" d="M30 34l2.6 6 6.4.5-4.9 4.2 1.6 6.3-5.7-3.5-5.7 3.5 1.6-6.3-4.9-4.2 6.4-.5Z" transform="rotate(-8 40 43)"/>`,
+  };
 
   PROJECTS.filter((p) => p.category === 'project').forEach((p, i) => {
     const r = rng(900 + i * 41);
-    const art = newSvg('0 0 80 80');
-    art.innerHTML = glyphs[i % glyphs.length]();
-    const j = () => f(r() * 2.2);
-    let poly = '';
-    for (let k = 0; k <= 10; k++) poly += `${k * 10}% ${j()}%,`;
-    for (let k = 1; k <= 6; k++) poly += `${f(100 - r() * 1.6)}% ${f(k * 16.6)}%,`;
-    for (let k = 10; k >= 0; k--) poly += `${k * 10}% ${f(100 - r() * 2.2)}%,`;
-    for (let k = 5; k >= 1; k--) poly += `${f(r() * 1.6)}% ${f(k * 16.6)}%,`;
-    const paper = el('div', {},
-      art,
+    const li = el('li', { className: 'card reveal' },
+      art('0 0 80 80', cardArt[p.id] || ''),
       el('p', { className: 'year', textContent: p.year }),
       el('h3', { textContent: p.title }),
       el('p', { textContent: p.description }),
       moreBtn(p));
-    paper.style.clipPath = `polygon(${poly.slice(0, -1)})`;
-    const li = el('li', { className: 'scrap reveal' }, paper);
-    li.style.transform = `rotate(${f((r() - 0.5) * 4)}deg)`;
-    $('scraps').append(li);
+    li.style.transform = `rotate(${f((r() - 0.5) * 3.6)}deg)`;
+    li.style.setProperty('--tape', `${f((r() - 0.5) * 10)}deg`);
+    $('cards').append(li);
   });
 
-  /* ---------- one motion, many marks ---------- */
-  (() => {
-    const r = rng(77), g = svg('g', { stroke: '#4a5a44', 'stroke-linecap': 'round' });
-    for (let i = 0; i < 420; i++) {
-      const t = Math.pow(r(), 0.8);
-      const cx = 60 + t * 600, cy = 30 + 190 * Math.pow(t, 1.6) - 60 * Math.sin(t * 3);
-      const spread = 12 + 34 * Math.sin(t * Math.PI);
-      const x = cx + (r() - 0.5) * spread * 2.4, y = cy + (r() - 0.5) * spread;
-      const a = 0.5 + t * 0.5 + (r() - 0.5) * 0.6, L = 2 + r() * 4;
-      g.append(svg('line', { x1: f(x), y1: f(y), x2: f(x + L * Math.cos(a)), y2: f(y + L * Math.sin(a)), 'stroke-width': f(0.6 + r() * 0.8), opacity: f(0.35 + r() * 0.6) }));
-    }
-    $('flock').append(g);
-  })();
-
-  (() => {
-    const r = rng(13); let d = '';
-    for (let x = 0; x < 1000; x += 1.2 + r() * 3) {
-      const h = 18 + r() * 52, lean = (r() - 0.5) * 16;
-      d += `M${f(x)} 90Q${f(x + lean * 0.2)} ${f(90 - h * 0.6)} ${f(x + lean)} ${f(90 - h)}`;
-    }
-    $('grass').append(svg('path', { d, fill: 'none', stroke: '#55704b', 'stroke-width': 0.6, opacity: 0.8, 'vector-effect': 'non-scaling-stroke' }));
-  })();
-
-  /* ---------- skills: a stitched sampler ---------- */
-  const stitches = [
-    () => [8, 17, 26, 35, 43].map((o) => `<rect x="${o}" y="${o}" width="${100 - o * 2}" height="${100 - o * 2}"/>`).join(''),
-    () => [18, 32, 46, 60, 74, 88].map((q) => `<path d="M${q} 96A${q} ${q} 0 0 0 4 ${96 - q}"/>`).join(''),
-    () => [14, 26, 38, 50, 62, 74, 86].map((y) => `<path d="M6 ${y}q11 -9 22 0t22 0 22 0 22 0"/>`).join(''),
-    () => [-80, -60, -40, -20, 0, 20, 40, 60, 80].map((o) => `<path d="M${o} 0l100 100M${100 + o} 0l-100 100"/>`).join(''),
-    () => {
-      let s = '';
-      for (let row = 0; row < 6; row++) for (let c = -1; c < 5; c++) s += `<path d="M${c * 22 + (row % 2) * 11 + 4} ${row * 15 + 22}a11 11 0 0 1 22 0"/>`;
-      return s;
-    },
-    (r) => {
-      let s = '';
-      for (let k = 0; k < 16; k++) { const x = 12 + r() * 76, y = 12 + r() * 76; s += `<path d="M${f(x - 4)} ${f(y - 4)}l8 8M${f(x + 4)} ${f(y - 4)}l-8 8"/>`; }
-      return s;
-    },
-  ];
-  let n = 0;
+  /* ---------- skills: books on shelves ---------- */
   SKILLS.forEach(([title, skills], cat) => {
-    $('legend').append(el('li', { className: `c${cat}`, textContent: title }));
-    skills.forEach((skill) => {
-      const s = newSvg('0 0 100 100');
-      s.setAttribute('preserveAspectRatio', 'none');
-      s.innerHTML = `<g fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2.5" clip-path="inset(0)">${stitches[(n * 5 + cat) % stitches.length](rng(200 + n))}</g>`;
-      $('quilt').append(el('li', { className: `tile c${cat}`, title }, s, el('span', { textContent: skill })));
-      n++;
+    const r = rng(40 + cat * 7);
+    const books = el('ul', { className: 'books' });
+    skills.forEach((skill, k) => {
+      const li = el('li', { className: `book s${cat}${k === skills.length - 1 && skills.length > 5 ? ' lean' : ''}` }, el('span', { textContent: skill }));
+      li.firstChild.style.setProperty('--w', `${f(2 + r() * 0.9)}rem`);
+      li.firstChild.style.paddingBlock = `${f(0.9 + r() * 0.9)}rem`;
+      books.append(li);
     });
-  });
-  // fill the last row so the sampler stays a full rectangle at 5 or 3 columns
-  while (n % 15) {
-    const s = newSvg('0 0 100 100');
-    s.innerHTML = `<g fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2.5">${stitches[n % 3]()}</g>`;
-    const li = el('li', { className: 'tile' }, s);
-    li.style.color = '#7d756a'; li.setAttribute('aria-hidden', 'true');
-    $('quilt').append(li);
-    n++;
-  }
-
-  /* ---------- night: two ripples, one water ---------- */
-  [[230, 190, RED], [470, 220, '#8fa3d8']].forEach(([cx, cy, dot]) => {
-    const g = svg('g', { fill: 'none', stroke: CREAM, 'stroke-width': 0.6 });
-    g.style.setProperty('--cx', `${cx}px`); g.style.setProperty('--cy', `${cy}px`);
-    for (let rad = 16; rad < 330; rad += 26) g.append(svg('circle', { cx, cy, r: rad, opacity: f(Math.max(0.15, 1 - rad / 360)) }));
-    g.append(svg('circle', { cx, cy, r: 2.5, fill: dot, stroke: 'none' }));
-    $('ripples').append(g);
+    $('shelves').append(el('div', { className: 'shelf reveal' }, el('h3', { textContent: title }), books));
   });
 
-  const burst = (seed, tint) => {
-    const r = rng(seed), s = newSvg('0 0 120 120');
-    const g = svg('g', { stroke: tint, 'stroke-width': 0.7, 'stroke-linecap': 'round' });
-    for (let i = 4; i < 190; i++) {
-      const a = i * 2.39996, rad = Math.sqrt(i) * 3.9, L = 2.5 + r() * 2.5;
-      g.append(svg('line', { x1: f(60 + rad * Math.cos(a)), y1: f(60 + rad * Math.sin(a)), x2: f(60 + (rad + L) * Math.cos(a)), y2: f(60 + (rad + L) * Math.sin(a)), opacity: f(0.4 + r() * 0.6) }));
-    }
-    s.append(g, svg('circle', { cx: 60, cy: 60, r: 1.6, fill: '#e8c46a' }));
-    return s;
-  };
-  [['reading', CREAM], ['gymming', '#e3a79b'], ['making music', CREAM], ['the movies', '#c9c2ae']].forEach(([label, tint], i) => {
-    const li = el('li', { className: 'reveal' }, burst(500 + i * 9, tint));
-    if (label === 'making music') {
-      const b = el('button', { className: 'melody', id: 'melody', type: 'button' }, label, el('em', { textContent: 'play a little melody' }));
-      b.setAttribute('aria-pressed', 'false');
-      li.append(b);
-    } else li.append(el('span', { textContent: label }));
-    $('bursts').append(li);
-  });
-
-  (() => { // the boat and its lantern
-    const r = rng(31), b = $('boat');
-    let water = '';
-    for (let y = 150; y < 350; y += 9) for (let x = r() * 30; x < 700; x += 14 + r() * 40) water += `M${f(x)} ${y}h${f(4 + r() * 16)}`;
-    b.append(svg('path', { d: water, stroke: CREAM, 'stroke-width': 0.5, opacity: 0.22 }));
-    const rings = svg('g', { fill: 'none', stroke: '#e8c46a', 'stroke-width': 0.6 });
-    [24, 52, 86, 126, 172].forEach((rad, i) => {
-      const c = svg('ellipse', { class: 'ring', cx: 372, cy: 196, rx: rad * 1.25, ry: rad, opacity: f(0.7 - i * 0.12), transform: `rotate(${i * 14 - 20} 372 196)` });
-      c.style.animationDelay = `${-i * 0.8}s`;
-      rings.append(c);
-    });
-    const hull = svg('g', { class: 'hull', fill: 'none', stroke: CREAM, 'stroke-width': 1.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-    hull.innerHTML = `
-      <path d="M278 238h150l-14 16h-120Z"/>
-      <path d="M300 238q-2-26 10-34q12 8 10 34"/>
-      <path d="M372 238v-34"/>
-      <path d="M364 204h16l-2-16q-6-8-12 0Z" fill="rgba(232,196,106,.35)" stroke="#e8c46a"/>
-      <path d="M372 188v-8" stroke="#e8c46a"/>
-      <circle cx="372" cy="198" r="1.6" fill="#e8c46a" stroke="none"/>`;
-    b.append(rings, hull);
-    for (let k = 0; k < 40; k++) b.append(svg('circle', { cx: f(r() * 700), cy: f(r() * 130), r: f(0.4 + r() * 0.9), fill: CREAM, opacity: f(0.2 + r() * 0.6) }));
-  })();
-
-  /* ---------- circles that practice becoming birds ---------- */
+  /* ---------- night: a few stars and a hatched moon ---------- */
   (() => {
-    const r = rng(88), m = $('morph'), cols = 12, rows = 7;
-    const bird = (x, y, t, red, rot = 0) => {
-      const w = 17 * t, rad = 8.5 * (1 - t * 0.72);
-      const g = svg('g', { fill: 'none', stroke: red ? RED : INK, 'stroke-width': 1.1, 'stroke-linecap': 'round', transform: `translate(${f(x)} ${f(y)}) rotate(${f(rot)})` });
-      g.append(svg('circle', { r: f(rad) }));
-      if (t > 0.05) g.append(svg('path', { d: `M${f(-rad)} 0q${f(-w * 0.5)} ${f(-w * 0.75)} ${f(-w)} ${f(-w * 0.3)}M${f(rad)} 0q${f(w * 0.5)} ${f(-w * 0.75)} ${f(w)} ${f(-w * 0.3)}` }));
-      return g;
-    };
-    for (let row = 0; row < rows; row++) {
-      const t = row / (rows - 1);
-      for (let c = 0; c < cols; c++) {
-        if (row >= rows - 2 && r() < (row === rows - 1 ? 0.55 : 0.25)) continue; // some have already left
-        const loose = Math.max(0, t - 0.6) * 22;
-        m.append(bird(25 + c * 50 + (r() - 0.5) * loose, 22 + row * 50 + (r() - 0.5) * loose, t, (row + c) % 2 === 1, (r() - 0.5) * loose * 2));
-      }
+    const r = rng(31), sky = $('sky');
+    for (let k = 0; k < 90; k++) {
+      const c = svg('circle', { cx: f(r() * 1000), cy: f(r() * 600), r: f(0.5 + r() * 1.3), fill: MOON, opacity: f(0.2 + r() * 0.6) });
+      if (k % 6 === 0) { c.classList.add('tw'); c.style.animationDelay = `${f(-r() * 4)}s`; }
+      sky.append(c);
     }
-    for (let k = 0; k < 7; k++) m.append(bird(40 + r() * 520, 370 + r() * 90, 1, r() < 0.4, (r() - 0.5) * 50));
+    const moon = svg('g', { fill: 'none', stroke: MOON, 'stroke-width': 1, 'stroke-linecap': 'round', opacity: 0.8, transform: 'translate(800 90) rotate(-20)' });
+    moon.append(svg('path', { d: 'M0 -34A34 34 0 1 0 0 34A26 34 0 0 1 0 -34Z' }));
+    for (let y = -26; y <= 26; y += 6.5) {
+      const outer = -Math.sqrt(34 * 34 - y * y), inner = -26 * Math.sqrt(1 - (y * y) / (34 * 34));
+      moon.append(svg('path', { d: `M${f(outer + 1.5)} ${f(y)}L${f(inner - 1.5)} ${f(y + 2)}`, 'stroke-width': 0.6 }));
+    }
+    sky.append(moon);
   })();
 
-  /* ---------- the thread ---------- */
-  const thread = $('thread'), line = thread.querySelector('path');
-  let total = 0;
-  const layThread = () => {
-    const main = thread.parentElement, W = main.clientWidth, H = main.scrollHeight;
-    const r = rng(2026), col = Math.min(W - 40, 640);
-    const top = $('enso-top').getBoundingClientRect(), end = $('enso-end').getBoundingClientRect();
-    const sy = scrollY, y0 = top.top + sy + top.height / 2, y1 = end.top + sy + end.height / 2;
-    let x = top.left + top.width / 2, y = y0, d = `M${f(x)} ${f(y)}`;
-    while (y < y1 - 320) {
-      const ny = y + 220 + r() * 160, nx = W / 2 + (r() - 0.5) * col * 0.9;
-      d += `C${f(x)} ${f(y + (ny - y) * 0.5)} ${f(nx)} ${f(ny - (ny - y) * 0.5)} ${f(nx)} ${f(ny)}`;
-      x = nx; y = ny;
+  /* ---------- a strip of film, one frame per pastime ---------- */
+  (() => {
+    const r = rng(64), film = $('film');
+    const g = svg('g', { fill: 'none', stroke: MOON, 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+    const wobble = (y) => { let d = `M0 ${y}`; for (let x = 50; x <= 700; x += 50) d += `L${x} ${f(y + (r() - 0.5) * 1.6)}`; return d; };
+    g.append(svg('path', { d: wobble(8) }), svg('path', { d: wobble(182) }));
+    for (let x = 10; x < 690; x += 26) {
+      g.append(svg('rect', { x: f(x), y: 17, width: 13, height: 11, rx: 2.5, 'stroke-width': 0.9 }), svg('rect', { x: f(x), y: 162, width: 13, height: 11, rx: 2.5, 'stroke-width': 0.9 }));
     }
-    const ex = end.left + end.width / 2;
-    d += `C${f(x)} ${f(y + (y1 - y) * 0.5)} ${f(ex)} ${f(y1 - (y1 - y) * 0.6)} ${f(ex)} ${f(y1)}`;
-    line.setAttribute('d', d);
-    total = line.getTotalLength();
-    line.style.strokeDasharray = total;
+    const frames = [
+      // an open book
+      '<path d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path d="M40 24V64"/><path d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>',
+      // a dumbbell
+      '<path d="M22 40H58"/><path d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path d="M8 32h5v16H8zM67 32h5v16h-5z"/>',
+      // a pair of notes
+      '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>',
+      // a tub of popcorn
+      '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>',
+    ];
+    frames.forEach((inner, i) => {
+      const x = 20 + i * 168;
+      g.append(svg('rect', { x, y: 42, width: 156, height: 106, rx: 4 }));
+      const d = svg('g', { transform: `translate(${x + 78 - 46} ${95 - 46}) scale(1.15)` });
+      d.innerHTML = inner;
+      g.append(d);
+    });
+    film.append(g);
+  })();
+
+  /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
+  const thread = $('thread'), pen = thread.querySelector('path');
+  let total = 0;
+  const anchor = (node, [vx, vy]) => {
+    const b = node.getBoundingClientRect(), s = b.width / 280;
+    return [b.left + vx * s, b.top + scrollY + vy * s];
+  };
+  const layThread = () => {
+    const W = thread.parentElement.clientWidth, r = rng(2026), col = Math.min(W - 40, 640);
+    const [sx, sy] = anchor($('mark-top'), MARK_TAIL), [ex, ey] = anchor($('mark-end'), MARK_HEAD);
+    // drop out of the hook, then wander
+    let x = sx, y = sy + 150, d = `M${f(sx)} ${f(sy)}C${f(sx - 30)} ${f(sy + 50)} ${f(sx + 20)} ${f(sy + 90)} ${f(x)} ${f(y)}`;
+    let px = x, py = y - 60;
+    while (y < ey - 560) {
+      const ny = y + 220 + r() * 160, nx = W / 2 + (r() - 0.5) * col * 0.9;
+      d += `C${f(2 * x - px)} ${f(2 * y - py)} ${f(nx)} ${f(ny - (ny - y) * 0.5)} ${f(nx)} ${f(ny)}`;
+      px = nx; py = ny - (ny - y) * 0.5; x = nx; y = ny;
+    }
+    // one loop before arriving, the way a pen does when it's thinking
+    const lx = ex - 70, ly = ey - 170;
+    d += `C${f(2 * x - px)} ${f(2 * y - py)} ${f(lx - 60)} ${f(ly - 90)} ${f(lx)} ${f(ly)}`;
+    d += `C${f(lx + 50)} ${f(ly + 75)} ${f(lx + 120)} ${f(ly + 10)} ${f(lx + 70)} ${f(ly - 30)}`;
+    d += `C${f(lx + 20)} ${f(ly - 70)} ${f(ex - 80)} ${f(ey - 10)} ${f(ex)} ${f(ey)}`;
+    pen.setAttribute('d', d);
+    total = pen.getTotalLength();
+    pen.style.strokeDasharray = total;
     pull();
   };
   const pull = () => {
-    const main = thread.parentElement;
-    const p = still ? 1 : Math.min(1, (scrollY + innerHeight * 0.75) / main.scrollHeight);
-    line.style.strokeDashoffset = total * (1 - p);
+    const p = still ? 1 : Math.min(1, (scrollY + innerHeight * 0.75) / thread.parentElement.scrollHeight);
+    pen.style.strokeDashoffset = total * (1 - p);
   };
   let tick = false;
   addEventListener('scroll', () => {
@@ -361,7 +268,7 @@
   }, { passive: true });
 
   let resizeT;
-  const relayout = () => { asemic(); layThread(); };
+  const relayout = () => { code(); layThread(); };
   addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(relayout, 150); });
   addEventListener('load', relayout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layThread);
@@ -424,48 +331,4 @@
   const fromHash = () => { const m = location.hash.match(/^#log\/(.+)$/); if (m) openLog(decodeURIComponent(m[1])); };
   addEventListener('hashchange', fromHash);
   fromHash();
-
-  /* ---------- a little melody (web audio, nothing to download) ---------- */
-  const melodyBtn = $('melody'), label = melodyBtn.querySelector('em');
-  // D major pentatonic; [semitones from D4, beats]
-  const TUNE = [[0, 1], [4, 1], [7, 2], [9, 1], [7, 1], [4, 2], [2, 1], [4, 1], [7, 1], [12, 1], [9, 2], [7, 2],
-                [12, 1], [9, 1], [7, 2], [4, 1], [2, 1], [0, 2], [2, 1], [4, 1], [7, 1], [4, 1], [2, 2], [0, 4]];
-  const BEAT = 0.42;
-  let ctx = null, master = null, loop = null;
-  const playOnce = () => {
-    let t = ctx.currentTime + 0.05;
-    TUNE.forEach(([semi, beats]) => {
-      const dur = beats * BEAT;
-      [[1, 'triangle', 0.16], [0.5, 'sine', 0.1]].forEach(([mult, type, vol]) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = type;
-        o.frequency.value = 293.66 * Math.pow(2, semi / 12) * mult;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + 0.03);
-        g.gain.exponentialRampToValueAtTime(0.001, t + dur * 1.6);
-        o.connect(g).connect(master);
-        o.start(t);
-        o.stop(t + dur * 1.7);
-      });
-      t += dur;
-    });
-    return (t - ctx.currentTime) * 1000;
-  };
-  melodyBtn.addEventListener('click', () => {
-    if (ctx) {
-      clearTimeout(loop);
-      ctx.close(); ctx = null;
-      melodyBtn.setAttribute('aria-pressed', 'false');
-      label.textContent = 'play a little melody';
-      return;
-    }
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    master = ctx.createGain();
-    master.gain.value = 0.7;
-    master.connect(ctx.destination);
-    const again = () => { loop = setTimeout(again, playOnce() + 900); };
-    again();
-    melodyBtn.setAttribute('aria-pressed', 'true');
-    label.textContent = 'hush';
-  });
 })();
