@@ -1,11 +1,12 @@
 # Jason Johnson — portfolio
 
-One portfolio, drawn two ways. Plain HTML, CSS and JavaScript — no build step.
+One portfolio, drawn three ways; a small switcher at the bottom of each page flips between them. Plain HTML, CSS and JavaScript — no build step.
 
-- `index.html` — landing page linking to both versions
+- `index.html` — landing page linking to all three versions
 - `thread/` — a single pen line running from a sketched J through hand-drawn code, job sketches, index cards, a bookshelf of skills and a strip of film
+- `scribble/` — the first pass at the pen-line style: scribbled writing, blossom branches, paper scraps, a stitched skills sampler
 - `ink/` — brush ink on paper: a voyage through work, lanterns for side projects, constellations for skills
-- `projects.js` — all content (work, projects, skills), shared by both versions
+- `projects.js` — all content (work, projects, skills), shared by all versions
 - `projects/` — screenshots and clips
 - `resume.pdf`
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Jason Johnson — portfolio</title>
-  <meta name="description" content="Jason Johnson — full stack developer. Two hand-drawn versions of the same portfolio.">
+  <meta name="description" content="Jason Johnson — full stack developer. Three hand-drawn versions of the same portfolio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     p { margin: 0; color: #7d756a; }
     ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
     a { display: block; width: 15rem; padding: 1.6rem 1.2rem; color: inherit; text-decoration: none; background: #fbf8f0; border: 1px solid #7d756a; outline: 1px dashed #7d756a; outline-offset: -7px; transition: transform .25s ease; }
-    li:first-child a { transform: rotate(-1.2deg); } li:last-child a { transform: rotate(1deg); }
+    li:nth-child(odd) a { transform: rotate(-1.2deg); } li:nth-child(even) a { transform: rotate(1deg); }
     a:hover, a:focus-visible { transform: rotate(0) translateY(-3px); }
     strong { display: block; font-weight: 400; font-size: 1.5rem; color: #c9483a; }
   </style>
@@ -22,11 +22,12 @@
 <body>
   <div>
     <h1>jason johnson</h1>
-    <p>one portfolio, drawn two ways</p>
+    <p>one portfolio, drawn three ways</p>
   </div>
   <ul>
-    <li><a href="thread/"><strong>the thread</strong>a single pen line through hand-drawn code, index cards and a shelf of skills</a></li>
-    <li><a href="ink/"><strong>the voyage</strong>brush ink, a boat, lanterns and constellations</a></li>
+    <li><a href="ink/"><strong>1 · brush ink</strong>a brush J, a boat, lanterns and constellations</a></li>
+    <li><a href="scribble/"><strong>2 · scribbles</strong>the first pass at the recording's style: scribbled writing, blossom branches, a stitched sampler</a></li>
+    <li><a href="thread/"><strong>3 · pen line</strong>original drawings: hand-drawn code, index cards, a bookshelf, a strip of film</a></li>
   </ul>
 </body>
 </html>
