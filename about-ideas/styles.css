@@ -1,0 +1,14 @@
+/* Four water-themed treatments of the about pictures. Builds on ../thread/styles.css. */
+.intro { min-height: 44svh; display: grid; align-content: center; justify-items: center; text-align: center; padding: 6rem 1.25rem 3rem; }
+.water { background: #c8dadd; padding: 4rem 0 5rem; }
+.water + .water { border-top: 1.5rem solid var(--paper); }
+.water h2 { margin-bottom: 2.6rem; }
+.tag-letter { margin: 0 0 .2rem; text-align: center; color: var(--red); font-size: 1.05rem; }
+.row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1.2rem; align-items: end; }
+.row li:nth-child(even) { margin-bottom: 2rem; }
+.row svg { display: block; width: 100%; max-width: 9rem; height: auto; margin: 0 auto; overflow: visible; }
+#a svg { animation: bob 6s ease-in-out infinite; }
+#a li:nth-child(2) svg { animation-delay: -1.5s; } #a li:nth-child(3) svg { animation-delay: -3s; } #a li:nth-child(4) svg { animation-delay: -4.5s; }
+@keyframes bob { 50% { transform: translateY(-7px); } }
+@media (max-width: 640px) { .row { grid-template-columns: repeat(2, 1fr); } }
+@media (prefers-reduced-motion: reduce) { #a svg { animation: none; } }
