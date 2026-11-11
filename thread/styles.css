@@ -5,6 +5,8 @@
   --wheat: #efe7d3;
   --spring: #e6eadb;
   --blush: #efe0d6;
+  --night: #1d2130;
+  --moon: #e8e3d4;
   --ink: #25272e;
   --soft: #77756f;
   --red: #d1492e;
@@ -76,7 +78,7 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .band.blush { background: var(--blush); }
 .tear { position: absolute; left: 0; top: -27px; width: 100%; height: 28px; display: block; z-index: 3; }
 .blue .tear { color: var(--blue); } .wheat .tear { color: var(--wheat); } .spring .tear { color: var(--spring); }
-.paper .tear { color: var(--paper); } .blush .tear { color: var(--blush); }
+.paper .tear { color: var(--paper); } .night .tear { color: var(--night); } .blush .tear { color: var(--blush); }
 
 .more {
   font: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; color: var(--red);
@@ -84,15 +86,21 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 }
 .more:hover { border-bottom-style: solid; }
 
-/* work: a dotted route with a small boat that keeps pace down the page */
-.route { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1.4rem; }
-.rail { background: repeating-linear-gradient(to bottom, var(--soft) 0 2px, transparent 2px 11px) center / 1px 100% no-repeat; }
-.boat { position: sticky; top: 44vh; display: block; width: 100%; background: var(--blue); padding: .5rem 0; }
-.boat g { animation: bob 6s ease-in-out infinite; transform-origin: 0 10px; }
-@keyframes bob { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
-.jobs { list-style: none; margin: 0; padding: 0 0 2rem; display: grid; gap: 3.8rem; }
-.job { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1.4rem; align-items: center; }
-.job svg { width: 100%; height: auto; overflow: visible; }
+/* work: a constellation on a night band, with something small travelling along it */
+.band.night { background: var(--night); color: var(--moon); overflow: hidden; }
+.night h2 { color: var(--moon); }
+.night .year { color: #a9a596; }
+.night .more { color: #e8a08f; }
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pick { margin: -2.2rem 0 2.6rem; text-align: center; font-size: 1rem; color: #a9a596; }
+.pick button { font: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0 .2rem; color: inherit; cursor: pointer; border-bottom: 1px dashed transparent; }
+.pick button[aria-pressed="true"] { color: var(--moon); border-bottom-color: currentColor; }
+.sky-map { position: relative; }
+.star-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.jobs { list-style: none; margin: 0; padding: 0 0 1rem; display: grid; gap: 3.6rem; position: relative; }
+.job { display: flex; gap: 1.1rem; align-items: center; width: 64%; }
+.job:nth-child(even) { margin-left: auto; flex-direction: row-reverse; text-align: right; }
+.job .star { width: 2.4rem; flex: none; overflow: visible; }
 .job h3 { font-size: 1.7rem; letter-spacing: .06em; }
 .job p { margin: .1rem 0 .5rem; }
 
@@ -207,8 +215,7 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 @media (max-width: 640px) {
   body { font-size: 1.15rem; }
   .nav { font-size: .95rem; padding: .7rem 1rem; }
-  .route { grid-template-columns: 2.4rem 1fr; gap: .9rem; }
-  .job { grid-template-columns: 3.6rem 1fr; gap: .9rem; }
+  .job { width: 90%; }
   .cards { grid-template-columns: 1fr; gap: 3.4rem; }
   .keyrow:nth-child(n) { padding-left: 0; }
   .notes { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; padding: 0 1.5rem; }

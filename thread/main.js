@@ -91,7 +91,7 @@
     let d = 'M0 28L0 14';
     for (let x = 0; x <= 1000; x += 6 + r() * 16) d += `L${f(x)} ${f(r() < 0.04 ? 3 + r() * 4 : 11 + r() * 6)}`;
     d += 'L1000 14L1000 28Z';
-    t.append(svg('path', { d, fill: '#fcf9f1', transform: 'translate(0 -3)' }));
+    if (!t.closest('.night')) t.append(svg('path', { d, fill: '#fcf9f1', transform: 'translate(0 -3)' }));
     t.append(svg('path', { d, fill: 'currentColor' }));
   });
 
@@ -111,30 +111,9 @@
     for (let k = 0; k < 6; k++) place(r() < 0.5 ? r() * 8 : 90 + r() * 8, 14 + r() * 70);
   })();
 
-  /* ---------- work: a small sketch for each job ---------- */
+  /* ---------- shared pen settings for the small drawings ---------- */
   const line = `fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"`;
   const accent = `fill="none" stroke="${RED}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
-  const jobArt = {
-    // live numbers: bars with a pulse running over them
-    Chartbeat: `<g ${line}><path d="M9 88q40 2 83 -1"/><path d="M19 88v-17h9v17M34 88v-30h9v30M49 88v-23h9v23M64 88v-42h9v42M79 88v-33h9v33"/></g>
-      <path ${accent} d="M6 40h20l6-20 9 36 7-27 5 11h41"/>`,
-    // a door left open
-    Glassdoor: `<g ${line}><path d="M27 91V13h46v78"/><path d="M27 13l31 9v78l-31-9"/><path d="M33 24l19 5v24l-19-4Z" stroke-width="1"/><path d="M12 91q40 3 78 0"/></g>
-      <circle cx="52" cy="62" r="2.2" fill="${RED}"/><g ${line} stroke-width=".8" opacity=".6"><path d="M64 30l6-3M64 46h7M64 62l6 3"/></g>`,
-    // people gathering around one point
-    Konvene: (() => {
-      const r = rng(9); let s = `<g ${line} stroke-width="1">`;
-      for (let k = 0; k < 9; k++) {
-        const a = (k / 9) * Math.PI * 2 + 0.3, d = 30 + r() * 10, x = 50 + d * Math.cos(a), y = 52 + d * Math.sin(a);
-        s += `<path d="M${f(x)} ${f(y)}L${f(50 + 9 * Math.cos(a))} ${f(52 + 9 * Math.sin(a))}" stroke-dasharray="1.5 4"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(2.6 + r() * 1.6)}" stroke-dasharray="none"/>`;
-      }
-      return s + `</g><circle cx="50" cy="52" r="5" fill="${RED}"/>`;
-    })(),
-    // a pencil writing tests that pass
-    Scribe: `<g ${line}><path d="M72 12l12 10-44 50-15 5 3-15Z"/><path d="M64 21l12 10M28 62l12 10"/><path d="M12 90q6-8 12 0t12 0 12 0"/></g>
-      <path ${accent} d="M58 86l6 6 13-15"/>`,
-  };
-
   const moreBtn = (p) => {
     const b = el('button', { className: 'more', type: 'button', textContent: 'open' });
     b.setAttribute('aria-label', `Open ${p.title}`);
@@ -142,17 +121,78 @@
     return b;
   };
 
-  PROJECTS.filter((p) => p.category === 'work').forEach((p) => {
-    $('jobs').append(
-      el('li', { className: 'job reveal' },
-        art('0 0 100 100', jobArt[p.id] || `<circle cx="50" cy="50" r="30" ${line}/>`),
+  /* ---------- work: four stars joined into a constellation, and a traveller that follows the line ---------- */
+  (() => {
+    const MOON = '#e8e3d4', r = rng(41);
+    let dust = '';
+    for (let k = 0; k < 70; k++) dust += `<circle cx="${f(r() * 1000)}" cy="${f(r() * 800)}" r="${f(0.5 + r() * 1.1)}" fill="${MOON}" opacity="${f(0.15 + r() * 0.5)}"/>`;
+    $('dust').innerHTML = dust;
+
+    PROJECTS.filter((p) => p.category === 'work').forEach((p, k) => {
+      let rays = '';
+      const big = 13 - k * 1.5;
+      for (let j = 0; j < 4; j++) { const a = (j / 4) * Math.PI + 0.3, L = j % 2 ? big * 0.55 : big; rays += `M${f(-L * Math.cos(a))} ${f(-L * Math.sin(a))}L${f(L * Math.cos(a))} ${f(L * Math.sin(a))}`; }
+      const star = art('-16 -16 32 32', `<path d="${rays}" fill="none" stroke="${MOON}" stroke-width="1" stroke-linecap="round"/><circle r="2.4" fill="${k ? MOON : '#e8a08f'}"/>`);
+      star.classList.add('star');
+      $('jobs').append(el('li', { className: 'job reveal' }, star,
         el('div', {},
           el('p', { className: 'year', textContent: p.year }),
           el('h3', { textContent: p.title }),
           el('p', { textContent: p.description }),
-          moreBtn(p)))
-    );
-  });
+          moreBtn(p))));
+    });
+
+    // both travellers are drawn pointing right, then turned to face along the line
+    const travellers = {
+      star: `<path d="M-6 0H-46" stroke="${MOON}" stroke-width="1" opacity=".55"/><path d="M-46 0H-70" stroke="${MOON}" stroke-width=".8" opacity=".22"/>
+        <path d="M-7 -3L-30 -5M-7 3L-27 5" stroke="${MOON}" stroke-width=".7" opacity=".35"/>
+        <path d="M0 -7L1.8 -1.8 7 0 1.8 1.8 0 7 -1.8 1.8 -7 0 -1.8 -1.8Z" fill="${MOON}"/>`,
+      rocket: `<path d="M-11 -2.500L-19 0 -11 2.500" fill="none" stroke="#e8a08f" stroke-width="1.2" stroke-linejoin="round"/>
+        <g fill="#1d2130" stroke="${MOON}" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M-10 -5l-6 -5v6ZM-10 5l-6 5v-6Z"/><path d="M-10 -5Q4 -8 13 0Q4 8 -10 5Z"/><circle cx="3" cy="0" r="2.2"/></g>`.replace(/2\.500/g, '2.5'),
+    };
+    const sky = $('star-lines');
+    let pts = [], kind = 'star';
+    try { kind = localStorage.getItem('traveller') === 'rocket' ? 'rocket' : 'star'; } catch (e) { /* private mode */ }
+
+    const join = () => {
+      const box = sky.getBoundingClientRect();
+      pts = [...document.querySelectorAll('#jobs .star')].map((s) => { const b = s.getBoundingClientRect(); return [b.left + b.width / 2 - box.left, b.top + b.height / 2 - box.top]; });
+      let d = '';
+      pts.forEach(([x, y], k) => {
+        if (!k) return;
+        const [px, py] = pts[k - 1], len = Math.hypot(x - px, y - py), ux = (x - px) / len, uy = (y - py) / len;
+        d += `M${f(px + ux * 22)} ${f(py + uy * 22)}L${f(x - ux * 22)} ${f(y - uy * 22)}`;   // stop short of each star
+      });
+      sky.innerHTML = `<path d="${d}" fill="none" stroke="${MOON}" stroke-width=".8" stroke-linecap="round" stroke-dasharray="2 6" opacity=".45"/><g id="traveller"><g transform="scale(${kind === 'rocket' ? 1.35 : 1})">${travellers[kind]}</g></g>`;
+      travel();
+    };
+    // the traveller sits where the line crosses the middle of the screen
+    const travel = () => {
+      const t = document.getElementById('traveller');
+      if (!t || pts.length < 2) return;
+      const top = sky.getBoundingClientRect().top, first = pts[0][1], last = pts[pts.length - 1][1];
+      const y = Math.max(first, Math.min(last, innerHeight * 0.5 - top));
+      let k = 1;
+      while (k < pts.length - 1 && pts[k][1] < y) k++;
+      const [ax, ay] = pts[k - 1], [bx, by] = pts[k], u = (y - ay) / (by - ay || 1);
+      t.setAttribute('transform', `translate(${f(ax + (bx - ax) * u)} ${f(y)}) rotate(${f((Math.atan2(by - ay, bx - ax) * 180) / Math.PI)})`);
+    };
+    $('pick').querySelectorAll('button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.traveller === kind));
+      b.addEventListener('click', () => {
+        kind = b.dataset.traveller;
+        try { localStorage.setItem('traveller', kind); } catch (e) { /* private mode */ }
+        $('pick').querySelectorAll('button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+        join();
+      });
+    });
+    addEventListener('scroll', travel, { passive: true });
+    addEventListener('resize', join);
+    addEventListener('load', join);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(join);
+    join();
+  })();
 
   /* ---------- projects: index cards with a doodle each ---------- */
   const cardArt = {
