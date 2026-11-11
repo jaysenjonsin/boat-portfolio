@@ -137,7 +137,7 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .s2 { --cap: var(--pen); --tint: #dfe5f0; } .s3 { --cap: var(--ochre); --tint: #f1e6c8; }
 .keyrow h3 { color: var(--cap); }
 
-/* about: a line of music, a few paper notes, a grove */
+/* about: a line of music, a few paper notes, a snowy shore */
 .band.blush { padding-bottom: 0; overflow: hidden; }
 .staff { display: block; width: 100%; height: 110px; margin: 3.5rem 0 3rem; }
 .notes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; font-size: 1.05rem; }
@@ -145,9 +145,13 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .scrap:nth-child(even) { margin-top: 2.5rem; }
 .scrap .sheet div { background: var(--edge); padding: 1.1rem .8rem; }
 .scrap svg { display: block; width: 100%; max-width: 5rem; height: auto; margin: 0 auto; overflow: visible; }
-.grove { display: block; width: 100%; height: 26rem; margin-top: 1rem; }
-.grove .sway { transform-box: fill-box; transform-origin: bottom center; animation: sway 9s ease-in-out infinite; }
-@keyframes sway { 50% { transform: rotate(1.2deg); } }
+.arctic { display: block; width: 100%; height: 26rem; margin-top: 1rem; }
+.arctic .waddle { transform-box: fill-box; transform-origin: bottom center; animation: waddle 1.6s ease-in-out infinite; }
+@keyframes waddle { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.arctic .tail { transform-box: fill-box; transform-origin: left bottom; animation: swish 4s ease-in-out infinite; }
+@keyframes swish { 50% { transform: rotate(-7deg); } }
+.arctic .snow { animation: fall 9s linear infinite; }
+@keyframes fall { from { transform: translateY(-40px); opacity: 0; } 15%, 80% { opacity: .9; } to { transform: translateY(120px); opacity: 0; } }
 
 /* hello */
 .hello { text-align: center; padding: 9rem 0 2.5rem; }
@@ -196,7 +200,7 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
   .keyrow:nth-child(n) { padding-left: 0; }
   .notes { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; padding: 0 1.5rem; }
   .scrap:nth-child(even) { margin-top: 1.5rem; }
-  .grove { height: 20rem; }
+  .arctic { height: 20rem; }
   .key { min-width: 3rem; height: 3.1rem; padding: 0 .65rem .25rem; font-size: 1rem; }
   #asemic { height: 24rem; }
 }

@@ -259,36 +259,49 @@
     });
   })();
 
-  /* ---------- a grove growing up from the bottom edge ---------- */
+  /* ---------- a cold shore: ice, penguins, a fox ---------- */
   (() => {
-    const grove = $('grove'), petals = ['#3f7d78', '#a97b22', RED, '#7d8f5c'];
-    [[90, 62, 21], [330, 88, 4], [560, 70, 33], [800, 96, 12], [1060, 74, 27]].forEach(([x0, len, seed], t) => {
-      const r = rng(seed * 97 + 5), wood = {}, leaf = petals.map(() => '');
-      const grow = (x, y, ang, L, depth) => {
-        const x2 = x + Math.cos(ang) * L, y2 = y + Math.sin(ang) * L, bend = (r() - 0.5) * L * 0.5;
-        wood[depth] = (wood[depth] || '') + `M${f(x)} ${f(y)}Q${f((x + x2) / 2 + bend)} ${f((y + y2) / 2 + bend * 0.3)} ${f(x2)} ${f(y2)}`;
-        if (depth === 0) {
-          const c = Math.floor(r() * petals.length), n = 3 + Math.floor(r() * 3);
-          for (let k = 0; k < n; k++) {
-            const a = (k / n) * Math.PI * 2 + r(), P = 2 + r() * 3;
-            leaf[c] += `M${f(x2)} ${f(y2)}l${f(P * Math.cos(a))} ${f(P * Math.sin(a))}`;
-          }
-          return;
-        }
-        const kids = r() < 0.3 ? 3 : 2;
-        for (let k = 0; k < kids; k++) {
-          // branches reach outward and up, never straight back down
-          const a = Math.max(-2.9, Math.min(-0.25, ang + (k - (kids - 1) / 2) * 0.72 + (r() - 0.5) * 0.5));
-          grow(x2, y2, a, L * (0.7 + r() * 0.12), depth - 1);
-        }
-      };
-      grow(x0, 470, -Math.PI / 2 + (r() - 0.5) * 0.35, len, 7);
-      const g = svg('g', { class: 'sway', fill: 'none', 'stroke-linecap': 'round' });
-      g.style.animationDelay = `${-t * 1.7}s`;
-      Object.keys(wood).forEach((d) => g.append(svg('path', { d: wood[d], stroke: '#6a5b57', 'stroke-width': f(0.4 + d * 0.36) })));
-      leaf.forEach((d, c) => g.append(svg('path', { d, stroke: petals[c], 'stroke-width': 0.9, opacity: 0.75 })));
-      grove.append(g);
+    const r = rng(58), SNOW = '#fcf9f1', ICE = '#dce7ea', BEAK = '#d98a2b';
+    const pen = `stroke="${INK}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"`;
+    const penguin = (x, y, s, dir, waddle) => `
+      <g transform="translate(${x} ${y}) scale(${s * dir} ${s})"><g${waddle ? ' class="waddle"' : ''}>
+        <path d="M-9 20l-7 5M9 20l7 5" fill="none" stroke="${BEAK}" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M0 -62C17 -62 24 -32 22 0C21 14 12 21 0 21C-12 21 -21 14 -22 0C-24 -32 -17 -62 0 -62Z" fill="${INK}" ${pen}/>
+        <path d="M4 -46C14 -44 17 -22 15 0C14 10 9 16 1 16C-7 16 -12 10 -12 0C-12 -20 -8 -40 4 -46Z" fill="${SNOW}"/>
+        <path d="M14 -53l13 4-13 4Z" fill="${BEAK}" stroke="${BEAK}" stroke-width="1" stroke-linejoin="round"/>
+        <circle cx="8" cy="-52" r="1.7" fill="${SNOW}"/>
+        <path d="M-21 -30q-9 16 -5 32M21 -28q8 14 5 28" fill="none" stroke="${INK}" stroke-width="3.4" stroke-linecap="round"/>
+      </g></g>`;
+    let hatch = '';
+    [[150, 232, 196, 318], [612, 214, 660, 322], [1010, 250, 1046, 320]].forEach(([x1, y1, x2, y2]) => {
+      for (let k = 1; k < 7; k++) { const t = k / 7; hatch += `M${f(x1 + (x2 - x1) * t)} ${f(y1 + (y2 - y1) * t)}l${f(-(8 + r() * 14) * (1.2 - t))} ${f(4 + r() * 5)}`; }
     });
+    let snow = '';
+    for (let k = 0; k < 46; k++) snow += `<circle class="snow" cx="${f(r() * 1200)}" cy="${f(r() * 300)}" r="${f(1 + r() * 1.6)}" fill="${SNOW}" style="animation-delay:${f(-r() * 9)}s"/>`;
+    let prints = '';
+    for (let k = 0; k < 9; k++) prints += `<ellipse cx="${f(742 - k * 26)}" cy="${f(396 + Math.sin(k * 0.8) * 5 + (k % 2) * 5)}" rx="3" ry="1.6" fill="${INK}" opacity=".3"/>`;
+    $('arctic').innerHTML = `
+      <circle cx="930" cy="120" r="34" fill="${SNOW}" opacity=".75"/>
+      <g fill="${ICE}" ${pen}>
+        <path d="M40 330L96 262 150 232 196 318 232 286 268 330Z"/>
+        <path d="M500 330L548 268 612 214 660 322 700 296 728 330Z"/>
+        <path d="M930 330L968 280 1010 250 1046 320 1078 300 1100 330Z"/>
+      </g>
+      <path d="${hatch}" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".55"/>
+      <path d="M0 338Q150 312 330 330T700 326 1010 322 1200 336V460H0Z" fill="${SNOW}" ${pen} stroke-width="1"/>
+      <path d="M120 356q40 -6 84 0M430 350q30 -5 66 0M880 348q44 -6 92 0M1080 372q30 -4 60 0" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".4"/>
+      ${penguin(214, 372, 0.8, 1)}${penguin(262, 384, 1, -1, true)}${penguin(322, 378, 0.72, 1)}
+      ${penguin(1010, 380, 0.9, -1, true)}${penguin(1060, 392, 0.62, -1)}
+      ${prints}
+      <g transform="translate(748 302) scale(1.05)">
+        <path class="tail" d="M86 92Q118 102 134 82Q144 64 126 56Q132 74 114 80Q98 84 86 80Z" fill="${SNOW}" ${pen}/>
+        <path d="M22 52L8 48Q4 44 11 41L24 34 23 16 35 27Q41 25 46 28L55 17 56 36Q61 46 57 56Q80 60 88 78Q93 90 90 100H38Q43 88 39 77Q34 64 22 52Z" fill="${SNOW}" ${pen}/>
+        <path d="M54 78Q50 90 52 100M66 100Q64 92 70 86" fill="none" ${pen} stroke-width="1"/>
+        <circle cx="8.5" cy="45" r="2" fill="${INK}"/><path d="M22 40q3 -2 6 0" fill="none" ${pen}/>
+        <path d="M27 20l3 8M52 22l-2 8" fill="none" ${pen} stroke-width=".8" opacity=".6"/>
+      </g>
+      <path d="M0 418Q260 392 560 414T1200 408V460H0Z" fill="#f5f0e4"/>
+      ${snow}`;
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
