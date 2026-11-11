@@ -21,7 +21,7 @@
   const f = (n) => n.toFixed(1);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const INK = '#25272e', RED = '#d1492e';
-  const V = document.body.dataset.story; // a: falling star, b: night into morning, c: down to the water, d: the mix of all three
+  const V = document.body.dataset.story; // a: falling star, b: night into morning, c: down to the water, d: the mix of all three, e: sunset to sea
 
   /* ---------- the J, sketched over a few passes of the pen ---------- */
   // Hook ends near (62, 168) and the bar starts near (96, 60) in the mark's 280 x 270 box.
@@ -268,7 +268,7 @@
   /* ---------- about: a tune written out by hand ---------- */
   (() => {
     const r = rng(64), staff = $('staff');
-    const lines = svg('g', { fill: 'none', stroke: V === 'c' ? '#3c5a94' : INK, 'stroke-width': V === 'c' ? 0.9 : 0.7, opacity: 0.75 });
+    const lines = svg('g', { fill: 'none', stroke: V === 'c' || V === 'e' ? '#3c5a94' : INK, 'stroke-width': V === 'c' || V === 'e' ? 0.9 : 0.7, opacity: 0.75 });
     // the staff takes the shape of its story: wires sagging between two poles, an arc over the sunrise, or waves
     const drift = V === 'a' ? (x) => 20 * Math.sin((x / 1200) * Math.PI) + 1.5 * Math.sin(x / 60)
       : V === 'b' || V === 'd' ? (x) => 18 - 34 * Math.sin((x / 1200) * Math.PI)
@@ -304,9 +304,9 @@
       i++;
     }
     staff.append(lines, notes);
-    // in the water story a small boat sails the staff, and the notes sound as it passes
+    // in the water stories a small boat sits on the staff: in c it sails along as the notes sound, in e it rides at anchor
     let boat = null;
-    if (V === 'c') {
+    if (V === 'c' || V === 'e') {
       boat = svg('g', { fill: 'none', stroke: INK, 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
       boat.innerHTML = '<path d="M-16 3Q0 9 18 2L13 10Q0 14 -11 10Z" fill="#fcf9f1"/><path d="M1 5V-21"/><path d="M3 -19Q16 -9 4 1Z" fill="#fcf9f1"/><path d="M-2 -16Q-10 -7 -3 1"/><path d="M1 -21l7 2.5-7 2.5" stroke="#d1492e" fill="#d1492e" stroke-width="1"/>';
       staff.append(boat);
@@ -321,7 +321,7 @@
       const t = still ? 1 : Math.max(0, Math.min(1, (innerHeight * 0.92 - box.top) / (innerHeight * 0.6)));
       const head = 600 - half + t * (half * 2 + 20);
       played.forEach(([nx, note]) => note.classList.toggle('on', nx <= head));
-      if (boat) { const bx = Math.min(head, 600 + half - 28); boat.setAttribute('transform', `translate(${f(bx)} ${f(22 + drift(bx))})`); } // stays in view once the tune is done
+      if (boat) { const bx = V === 'e' ? 600 - half * 0.56 : Math.min(head, 600 + half - 28); boat.setAttribute('transform', `translate(${f(bx)} ${f(22 + drift(bx))})`); } // stays in view once the tune is done
     };
     addEventListener('scroll', play, { passive: true });
     addEventListener('resize', play);

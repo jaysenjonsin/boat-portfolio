@@ -28,7 +28,7 @@
 [data-story="a"] .plots .plot ul { row-gap: 1.6rem; }
 [data-story="a"] .plots span { width: 100%; padding-top: .35rem; border-top: 1.2px solid var(--ink); }  /* the ground */
 [data-story="a"] .landed, [data-story="d"] .landed { width: 1.9rem; left: calc(100% + .9rem); bottom: 1.7rem; }
-#tip { display: none; } [data-story="a"] #tip, [data-story="d"] #tip { display: inline; }
+#tip { display: none; } [data-story="a"] #tip, [data-story="d"] #tip, [data-story="e"] #tip { display: inline; }
 
 /* ---------- b · night into morning: one sky, no seams ---------- */
 [data-story="b"] .run {
@@ -37,7 +37,8 @@
 }
 [data-story="b"] .run .band { background: none; overflow: visible; }
 [data-story="b"] #projects h2 { color: var(--moon); }
-[data-story="b"] .flock [stroke="#25272e"], [data-story="b"] .flock [stroke="#4b4a3c"] { stroke: var(--moon); }
+[data-story="b"] .flock [stroke="#25272e"], [data-story="b"] .flock [stroke="#4b4a3c"],
+[data-story="e"] .flock [stroke="#25272e"], [data-story="e"] .flock [stroke="#4b4a3c"] { stroke: var(--moon); }
 [data-story="b"] .moon { position: absolute; overflow: visible; }
 [data-story="b"] .moon.high { width: 2.6rem; right: 12%; top: 5rem; }
 [data-story="b"] .moon.low { width: 2.2rem; right: 7%; top: 60%; opacity: .45; }
@@ -49,10 +50,10 @@
 [data-story="b"] .hello { padding-top: 5rem; }
 
 /* ---------- c · down to the water ---------- */
-[data-story="c"] .ripples { display: block; width: min(100%, 44rem); height: auto; margin: 2rem auto 0; }
-[data-story="c"] .band.sea { padding-bottom: 4rem; }
+[data-story="c"] .ripples, [data-story="e"] .ripples { display: block; width: min(100%, 44rem); height: auto; margin: 2rem auto 0; }
+[data-story="c"] .band.sea, [data-story="e"] .band.sea { padding-bottom: 4rem; }
 .finds .plot ul { row-gap: 1.2rem; }
-[data-story="c"] .landed { width: 3.4rem; left: calc(100% + .6rem); bottom: 1.4rem; }
+[data-story="c"] .landed, [data-story="e"] .landed { width: 3.4rem; left: calc(100% + .6rem); bottom: 1.4rem; }
 
 /* ---------- d · the mix: falling star, arched staff, the beach; each band fades in from the one above ---------- */
 [data-story="d"] .band { background: linear-gradient(var(--from), var(--mid, var(--own)) 7rem, var(--own) 14rem); padding-top: 15rem; }
@@ -63,7 +64,11 @@
 [data-story="d"] #contact { --from: var(--sand); --own: var(--paper); }
 [data-story="d"] .field { padding-bottom: 2rem; }
 
+/* ---------- e · sunset to sea: the water story, with the night fading through a sunset before the sky meets the sea ---------- */
+[data-story="e"] #projects { background: linear-gradient(var(--night) 0, #343150 16%, #6e5a72 38%, #c59f96 70%, var(--blush) 100%); padding-bottom: 8rem; }
+[data-story="e"] #projects h2 { color: var(--moon); }
+
 @media (max-width: 640px) {
-  [data-story="a"] .landed, [data-story="c"] .landed, [data-story="d"] .landed { left: calc(100% + .2rem); }
+  [data-story="a"] .landed, [data-story="c"] .landed, [data-story="d"] .landed, [data-story="e"] .landed { left: calc(100% + .2rem); }
   [data-story="b"] .moon.high { top: 3.5rem; right: 6%; width: 2rem; }
 }

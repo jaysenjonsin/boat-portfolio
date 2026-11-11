@@ -204,4 +204,4 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 .flip { font-family: var(--hand); }
 footer { padding-bottom: 3rem; /* flip */ }
 .flip span { display: none; } .flip a[aria-current] span { display: inline; } .flip a { padding: .15rem .7rem; }
-@media (max-width: 480px) { .flip a { padding: .15rem .5rem; } .flip a[aria-current] span { display: none; } }
+@media (max-width: 480px) { .flip { font-size: .88rem; gap: 0; } .flip a { padding: .15rem .36rem; } .flip a[aria-current] span { display: none; } }

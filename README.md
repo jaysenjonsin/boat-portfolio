@@ -7,6 +7,7 @@ One portfolio, drawn three ways; a small switcher at the bottom of each page fli
 - `skills/` — a scratch page with five alternative drawings of the skills section (islands, growth rings, tags on a line, a pressed garden, a record sleeve)
 - `work/` — a scratch page with four sky-themed drawings of the work section (orbits, a constellation, moon phases, the sun's climb)
 - `story/` — a scratch page with three storyboard sketches of the page as one continuous story
+- `story-e/` — the water story with the star on the line, a sunset fade over the side projects and the boat at anchor on the staff
 - `story-d/` — the current favourite: the falling star with the arched staff, the beach, and bands that fade into each other
 - `story-a/`, `story-b/`, `story-c/` — full builds of the three stories (falling star, night into morning, down to the water); they share `story/full.js` and `story/full.css` on top of the pen line styles
 - `scribble/` — the first pass at the pen-line style: scribbled writing, blossom branches, paper scraps, a stitched skills sampler
