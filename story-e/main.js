@@ -332,26 +332,24 @@
     play();
   })();
 
-  /* ---------- small paper notes, one per pastime ---------- */
+  /* ---------- the four pastimes, standing on the water with their reflections ---------- */
   (() => {
     const doodles = [
-      ['reading', '<path d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path d="M40 24V64"/><path d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>'],
-      ['gymming', '<path d="M22 40H58"/><path d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path d="M8 32h5v16H8zM67 32h5v16h-5z"/>'],
-      ['making music', '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>'],
-      ['the movies', '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>'],
+      '<path d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path d="M40 24V64"/><path d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>',  // reading
+      '<path d="M22 40H58"/><path d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path d="M8 32h5v16H8zM67 32h5v16h-5z"/>',                                                                // gymming
+      '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>',                                    // making music
+      '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>',                               // the movies
     ];
-    doodles.forEach(([, inner], i) => {
-      const r = rng(700 + i * 29);
-      const paper = el('div', {}, art('0 0 80 80', `<g filter="url(#rough)" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${inner.replace(/<(path|ellipse) /g, '<$1 pathLength="1" ')}</g>`));
-      let poly = '';
-      for (let k = 0; k <= 8; k++) poly += `${f(k * 12.5)}% ${f(r() * 3)}%,`;
-      for (let k = 1; k <= 5; k++) poly += `${f(100 - r() * 3)}% ${k * 20}%,`;
-      for (let k = 8; k >= 0; k--) poly += `${f(k * 12.5)}% ${f(100 - r() * 3)}%,`;
-      for (let k = 4; k >= 1; k--) poly += `${f(r() * 3)}% ${k * 20}%,`;
-      paper.style.clipPath = `polygon(${poly.slice(0, -1)})`;
-      const li = el('li', { className: 'scrap reveal' }, el('div', { className: 'sheet' }, paper));
-      li.style.transform = `rotate(${f((r() - 0.5) * 7)}deg)`;
-      $('notes').append(li);
+    const SEA = '#c8dadd', BLUE = '#3c5a94';
+    doodles.forEach((inner) => {
+      const figure = art('0 0 130 160', `
+        <g class="fig" transform="translate(25 4)" filter="url(#rough)" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${inner.replace(/<(path|ellipse) /g, '<$1 pathLength="1" ')}</g>
+        <path class="water" d="M6 80q10 -5 20 0t20 0 20 0 20 0 20 0 18 0" fill="none" stroke="${BLUE}" stroke-width="1" stroke-linecap="round"/>
+        <g class="refl">
+          <g transform="translate(25 160) scale(1 -1)" fill="none" stroke="${BLUE}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 4">${inner}</g>
+          <path d="M30 104h26M70 122h30M24 140h20" fill="none" stroke="${SEA}" stroke-width="3" stroke-linecap="round"/>
+        </g>`);
+      $('notes').append(el('li', { className: 'pool reveal' }, figure));
     });
   })();
 
