@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jason Johnson — full stack developer</title>
+  <meta name="description" content="Jason Johnson — full stack developer building responsive, accessible, and performant web applications.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f4efe3'/%3E%3Cpath d='M45 14A22 22 0 1 1 32 10' fill='none' stroke='%232a2622' stroke-width='5' stroke-linecap='round' stroke-dasharray='1 7'/%3E%3Cpath d='M32 27v10M27 32h10M28.5 28.5l7 7M35.5 28.5l-7 7' stroke='%23c9483a' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400&family=Newsreader:opsz,wght@6..72,300..500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="#top">jason johnson</a>
+  <nav aria-label="Sections">
+    <a href="#work">work</a>
+    <a href="#projects">projects</a>
+    <a href="#skills">skills</a>
+    <a href="#about">about</a>
+    <a href="../resume.pdf" target="_blank" rel="noopener">resume</a>
+  </nav>
+</header>
+
+<main id="top">
+  <svg id="thread" aria-hidden="true"><path fill="none"/></svg>
+
+  <!-- the circle -->
+  <section class="hero">
+    <svg class="enso" id="enso-top" viewBox="0 0 300 300" role="img" aria-label="An unclosed circle of ink marks with a small red star at its center"></svg>
+    <h1>hi, i'm jason.</h1>
+    <p class="lede">I'm a Full Stack Developer focused on building responsive, accessible, and performant web applications with modern technologies.</p>
+  </section>
+
+  <!-- a field of writing -->
+  <section class="field">
+    <canvas id="asemic" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="note">lines and lines of it, mostly</p>
+    </div>
+  </section>
+
+  <!-- work -->
+  <section class="band pink" id="work">
+    <svg class="tear" aria-hidden="true"></svg>
+    <div class="wrap">
+      <h2>where i've worked</h2>
+      <ol class="jobs" id="jobs"></ol>
+    </div>
+  </section>
+
+  <!-- projects -->
+  <section class="band green" id="projects">
+    <svg class="tear" aria-hidden="true"></svg>
+    <svg class="flock" id="flock" viewBox="0 0 700 260" aria-hidden="true"></svg>
+    <div class="wrap">
+      <h2>things i made on the side</h2>
+      <ul class="scraps" id="scraps"></ul>
+    </div>
+    <svg class="grass" id="grass" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true"></svg>
+  </section>
+
+  <!-- skills -->
+  <section class="band paper" id="skills">
+    <svg class="tear" aria-hidden="true"></svg>
+    <div class="wrap">
+      <h2>a sampler of what i work with</h2>
+      <ul class="legend" id="legend"></ul>
+      <ul class="quilt" id="quilt"></ul>
+    </div>
+  </section>
+
+  <!-- about, at night -->
+  <section class="band dark" id="about">
+    <svg class="tear" aria-hidden="true"></svg>
+    <svg class="ripples" id="ripples" viewBox="0 0 700 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+    <div class="wrap">
+      <h2>about me</h2>
+      <p class="lede">When I'm not coding, you can find me reading, gymming, making music or going to the movies!</p>
+      <ul class="bursts" id="bursts"></ul>
+      <svg class="boat" id="boat" viewBox="0 0 700 360" aria-hidden="true"></svg>
+    </div>
+  </section>
+
+  <!-- hello -->
+  <section class="band paper hello" id="contact">
+    <svg class="tear" aria-hidden="true"></svg>
+    <div class="wrap">
+      <svg class="morph" id="morph" viewBox="0 0 600 470" aria-hidden="true"></svg>
+      <svg class="enso" id="enso-end" viewBox="0 0 300 300" aria-hidden="true"></svg>
+      <h2>say hello</h2>
+      <ul class="links">
+        <li><a href="https://linkedin.com/in/jasoncjohnson5" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="https://github.com/jaysenjonsin" target="_blank" rel="noopener">github</a></li>
+        <li><a href="mailto:jasoncjohnson626@gmail.com">email</a></li>
+        <li><a href="../resume.pdf" target="_blank" rel="noopener">resume</a></li>
+      </ul>
+      <footer>jason johnson · 2026 · <a href="../ink/">see the other version</a></footer>
+    </div>
+  </section>
+</main>
+
+<dialog class="log" id="log" aria-labelledby="log-title">
+  <button class="log-close" id="log-close" type="button" aria-label="Close">close ×</button>
+  <p class="year" id="log-year"></p>
+  <h2 id="log-title"></h2>
+  <div class="carousel" id="carousel" hidden>
+    <div class="frame" id="frame"></div>
+    <div class="carousel-bar">
+      <button type="button" id="prev" aria-label="Previous image">←</button>
+      <span id="count" aria-live="polite"></span>
+      <button type="button" id="next" aria-label="Next image">→</button>
+    </div>
+  </div>
+  <p class="log-body" id="log-body"></p>
+  <h3>technologies</h3>
+  <ul class="tags" id="log-tech"></ul>
+  <ul class="links" id="log-links"></ul>
+</dialog>
+
+<script src="../projects.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

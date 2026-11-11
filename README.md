@@ -1,20 +1,23 @@
 # Jason Johnson — portfolio
 
-A hand-drawn, ink-on-paper single page: an open circle, a voyage through work, lanterns for side projects, constellations for skills.
+One portfolio, drawn two ways. Plain HTML, CSS and JavaScript — no build step.
 
-Plain HTML, CSS and JavaScript — no build step.
-
-- `index.html` — page structure and illustrations
-- `styles.css` — look and motion
-- `projects.js` — all content (work, projects, skills)
-- `main.js` — rendering, the project viewer, and the melody
+- `index.html` — landing page linking to both versions
+- `thread/` — a single thread running through scribbled writing, torn paper bands, a stitched skills sampler and a night scene
+- `ink/` — brush ink on paper: a voyage through work, lanterns for side projects, constellations for skills
+- `projects.js` — all content (work, projects, skills), shared by both versions
 - `projects/` — screenshots and clips
+- `resume.pdf`
 
 ## Run locally
 
 ```bash
 npx serve .
+# or
+python3 -m http.server 4173
 ```
+
+Then open the printed address.
 
 ## Deploy
 

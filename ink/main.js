@@ -110,7 +110,7 @@
 
   const show = (i) => {
     at = (i + media.length) % media.length;
-    const src = media[at];
+    const src = '../' + media[at];
     const node = src.endsWith('.mp4')
       ? el('video', { src, autoplay: true, loop: true, muted: true, playsInline: true })
       : el('img', { src, alt: `${current.title} screenshot ${at + 1}` });

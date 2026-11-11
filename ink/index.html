@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jason Johnson — full stack developer</title>
+  <meta name="description" content="Jason Johnson — full stack developer building responsive, accessible, and performant web applications.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f3ecdc'/%3E%3Cpath d='M45 14A22 22 0 1 1 32 10' fill='none' stroke='%231f1b16' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23c8371f'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Shantell+Sans:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- shared ink filters -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+    </filter>
+    <filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.02" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7"/>
+    </filter>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#f2a65a" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#f2a65a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<header class="nav">
+  <a class="nav-name" href="#top">jason johnson</a>
+  <nav aria-label="Sections">
+    <a href="#work">work</a>
+    <a href="#projects">projects</a>
+    <a href="#skills">skills</a>
+    <a href="#about">about</a>
+    <a href="../resume.pdf" target="_blank" rel="noopener">resume</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- 1 · the circle -->
+  <section class="hero">
+    <svg class="enso draw in-now" viewBox="0 0 300 300" role="img" aria-label="An unclosed ink circle with a small red mark at its center">
+      <g filter="url(#brush)" fill="none" stroke-linecap="round">
+        <path pathLength="1" d="M227 58A120 120 0 1 1 150 30" stroke="var(--ink)" stroke-width="15"/>
+        <path pathLength="1" d="M222 66A111 111 0 1 1 152 39" stroke="var(--ink)" stroke-width="2" opacity=".45"/>
+      </g>
+      <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)" filter="url(#rough)"/>
+    </svg>
+    <h1>hi, i'm jason.</h1>
+    <p class="lede">I'm a Full Stack Developer focused on building responsive, accessible, and performant web applications with modern technologies.</p>
+    <a class="hint" href="#work">follow the water <span aria-hidden="true">↓</span></a>
+  </section>
+
+  <!-- 2 · the voyage (work) -->
+  <section class="voyage" id="work">
+    <div class="wrap">
+      <p class="eyebrow reveal">i. the voyage</p>
+      <h2 class="reveal">what i've built, port by port</h2>
+      <div class="sea" aria-hidden="true">
+        <svg class="waves" id="waves" viewBox="0 0 1200 60" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="route">
+        <div class="route-rail" aria-hidden="true">
+          <svg class="boat" viewBox="0 0 120 110">
+            <g filter="url(#rough)" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 72Q58 92 110 70L96 90Q58 100 26 90Z" fill="var(--paper)"/>
+              <path d="M60 76V12"/>
+              <path d="M64 18Q98 40 66 66Z" fill="var(--paper)"/>
+              <path d="M55 26Q34 46 54 66"/>
+              <path d="M60 12l14 5-14 5" stroke="var(--red)" fill="var(--red)" stroke-width="2"/>
+              <path d="M4 104q10-7 20 0t20 0 20 0 20 0 20 0" stroke-width="2" opacity=".6"/>
+            </g>
+          </svg>
+        </div>
+        <ol class="ports" id="ports"></ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="dusk" aria-hidden="true"></div>
+
+  <!-- 3 · lanterns (side projects) -->
+  <section class="night" id="projects">
+    <svg class="sky" aria-hidden="true"></svg>
+    <div class="wrap">
+      <p class="eyebrow reveal">ii. lanterns</p>
+      <h2 class="reveal">small lights i made along the way</h2>
+      <ul class="lanterns" id="lanterns"></ul>
+    </div>
+  </section>
+
+  <!-- 4 · constellations (skills) -->
+  <section class="night stars-section" id="skills">
+    <svg class="sky" aria-hidden="true"></svg>
+    <div class="wrap">
+      <p class="eyebrow reveal">iii. constellations</p>
+      <h2 class="reveal">what i steer by</h2>
+      <div class="constellations" id="constellations"></div>
+    </div>
+  </section>
+
+  <div class="dawn" aria-hidden="true"></div>
+
+  <!-- 5 · ashore (about) -->
+  <section class="ashore" id="about">
+    <div class="wrap">
+      <p class="eyebrow reveal">iv. ashore</p>
+      <h2 class="reveal">about me</h2>
+      <p class="lede reveal">When I'm not coding, you can find me reading, gymming, making music or going to the movies!</p>
+      <ul class="doodles">
+        <li class="reveal">
+          <svg class="draw" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#rough)" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M40 24Q26 14 10 20V60Q26 54 40 64Q54 54 70 60V20Q54 14 40 24Z"/><path pathLength="1" d="M40 24V64"/><path pathLength="1" d="M18 32q8-3 14 1M18 42q8-3 14 1M48 33q8-4 14-1M48 43q8-4 14-1"/>
+          </g></svg><span>reading</span>
+        </li>
+        <li class="reveal">
+          <svg class="draw" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#rough)" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M22 40H58"/><path pathLength="1" d="M16 26h7v28h-7zM57 26h7v28h-7z"/><path pathLength="1" d="M8 32h5v16H8zM67 32h5v16h-5z"/>
+          </g></svg><span>gymming</span>
+        </li>
+        <li class="reveal">
+          <svg class="draw" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#rough)" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M30 56V18l30-6v38"/><path pathLength="1" d="M30 28l30-6"/><ellipse pathLength="1" cx="22" cy="57" rx="8" ry="6"/><ellipse pathLength="1" cx="52" cy="51" rx="8" ry="6"/>
+          </g></svg>
+          <button class="melody" id="melody" type="button" aria-pressed="false">making music <em>— play a little melody</em></button>
+        </li>
+        <li class="reveal">
+          <svg class="draw" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#rough)" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M10 26h60v10q-6 2-6 6t6 6v10H10V48q6-2 6-6t-6-6Z"/><path pathLength="1" d="M28 30v4M28 40v4M28 50v4"/><path pathLength="1" d="M42 36l12 6-12 6Z"/>
+          </g></svg><span>the movies</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 · the open circle (contact) -->
+  <section class="hello" id="contact">
+    <div class="wrap">
+      <svg class="enso small draw" viewBox="0 0 300 300" aria-hidden="true">
+        <g filter="url(#brush)" fill="none" stroke-linecap="round">
+          <path pathLength="1" d="M227 58A120 120 0 1 1 150 30" stroke="var(--ink)" stroke-width="15"/>
+        </g>
+        <circle class="seal" cx="150" cy="152" r="7" fill="var(--red)" filter="url(#rough)"/>
+      </svg>
+      <h2 class="reveal">the circle's left open on purpose.<br>say hello.</h2>
+      <ul class="links reveal">
+        <li><a href="https://linkedin.com/in/jasoncjohnson5" target="_blank" rel="noopener">— LinkedIn</a></li>
+        <li><a href="https://github.com/jaysenjonsin" target="_blank" rel="noopener">— GitHub</a></li>
+        <li><a href="mailto:jasoncjohnson626@gmail.com">— email</a></li>
+        <li><a href="../resume.pdf" target="_blank" rel="noopener">— resume</a></li>
+      </ul>
+    </div>
+    <footer>© Jason Johnson · <a href="../thread/">see the other version</a></footer>
+  </section>
+</main>
+
+<!-- project log -->
+<dialog class="log" id="log" aria-labelledby="log-title">
+  <button class="log-close" id="log-close" type="button" aria-label="Close">close ✕</button>
+  <p class="log-year" id="log-year"></p>
+  <h2 id="log-title"></h2>
+  <div class="carousel" id="carousel" hidden>
+    <div class="frame" id="frame"></div>
+    <div class="carousel-bar">
+      <button type="button" id="prev" aria-label="Previous image">←</button>
+      <span id="count" aria-live="polite"></span>
+      <button type="button" id="next" aria-label="Next image">→</button>
+    </div>
+  </div>
+  <p class="log-body" id="log-body"></p>
+  <h3>technologies</h3>
+  <ul class="tags" id="log-tech"></ul>
+  <ul class="links" id="log-links"></ul>
+</dialog>
+
+<script src="../projects.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
