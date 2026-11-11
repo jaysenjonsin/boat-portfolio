@@ -1,0 +1,44 @@
+/* Four sky-themed drawings of the work section. Builds on ../thread/styles.css and ../skills/styles.css. */
+.job-text .year { margin: 0; }
+.job-text h3 { font-size: 1.5rem; color: inherit; letter-spacing: .06em; }
+.job-text p { margin: .1rem 0 0; }
+.idea ol { list-style: none; margin: 0; padding: 0; }
+
+/* a · orbits */
+.orrery { display: block; width: 100%; height: auto; overflow: hidden; margin-bottom: 2.4rem; }
+.planets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2rem 2rem; }
+.planets li { display: grid; grid-template-columns: 2.6rem 1fr; gap: .9rem; align-items: start; }
+.planets svg { width: 100%; height: auto; overflow: visible; margin-top: .5rem; }
+
+/* b · a constellation */
+.band.night { background: #1d2130; color: #e8e3d4; overflow: hidden; }
+.night .tear { color: #1d2130; }
+.night h2, .night .job-text h3 { color: #e8e3d4; }
+.night .year { color: #a9a596; }
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sky-map { position: relative; }
+.links-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.starlist { display: grid; gap: 3.4rem; position: relative; }
+.starlist li { display: flex; gap: 1.1rem; align-items: center; width: 62%; }
+.starlist li:nth-child(even) { margin-left: auto; flex-direction: row-reverse; text-align: right; }
+.starlist svg { width: 2.4rem; flex: none; overflow: visible; }
+
+/* c · phases */
+.moons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1.4rem; text-align: center; }
+.moons svg { display: block; width: 4.2rem; height: auto; margin: 0 auto .9rem; overflow: visible; }
+.moons .job-text h3 { font-size: 1.35rem; }
+.moons .job-text p:last-child { font-size: 1.05rem; line-height: 1.35; }
+
+/* d · the sun's climb */
+.arc { display: block; width: 100%; height: auto; overflow: visible; }
+.suns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1rem; text-align: center; margin-top: .6rem; }
+.suns .job-text h3 { font-size: 1.35rem; }
+.suns .job-text p:last-child { font-size: 1.05rem; line-height: 1.35; }
+
+@media (max-width: 640px) {
+  .planets { grid-template-columns: 1fr; }
+  .starlist li { width: 88%; }
+  .moons, .suns { grid-template-columns: repeat(2, 1fr); }
+  .arc { display: none; }
+  .suns li::before { content: attr(data-hour); display: block; color: var(--soft); font-size: .95rem; }
+}
