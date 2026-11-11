@@ -27,7 +27,7 @@
 [data-story="a"] .band.blush { padding-bottom: 6rem; overflow: visible; }
 [data-story="a"] .plots .plot ul { row-gap: 1.6rem; }
 [data-story="a"] .plots span { width: 100%; padding-top: .35rem; border-top: 1.2px solid var(--ink); }  /* the ground */
-[data-story="a"] .landed, [data-story="d"] .landed { width: 1.9rem; left: calc(100% + .9rem); bottom: 1.7rem; }
+[data-story="a"] .landed, [data-story="d"] .landed, [data-story="e"] .landed { width: 1.9rem; left: calc(100% + .9rem); bottom: 1.7rem; }
 #tip { display: none; } [data-story="a"] #tip, [data-story="d"] #tip, [data-story="e"] #tip { display: inline; }
 
 /* ---------- b · night into morning: one sky, no seams ---------- */
@@ -53,7 +53,7 @@
 [data-story="c"] .ripples, [data-story="e"] .ripples { display: block; width: min(100%, 44rem); height: auto; margin: 2rem auto 0; }
 [data-story="c"] .band.sea, [data-story="e"] .band.sea { padding-bottom: 4rem; }
 .finds .plot ul { row-gap: 1.2rem; }
-[data-story="c"] .landed, [data-story="e"] .landed { width: 3.4rem; left: calc(100% + .6rem); bottom: 1.4rem; }
+[data-story="c"] .landed { width: 3.4rem; left: calc(100% + .6rem); bottom: 1.4rem; }
 
 /* ---------- d · the mix: falling star, arched staff, the beach; each band fades in from the one above ---------- */
 [data-story="d"] .band { background: linear-gradient(var(--from), var(--mid, var(--own)) 7rem, var(--own) 14rem); padding-top: 15rem; }

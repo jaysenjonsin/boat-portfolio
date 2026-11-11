@@ -1,0 +1,50 @@
+/* Four drawings of the side projects in the sunset sky. Builds on ../thread/styles.css. */
+.intro { min-height: 50svh; display: grid; align-content: center; justify-items: center; text-align: center; padding: 6rem 1.25rem 3rem; }
+.dusk { position: relative; padding: 5rem 0 7rem; color: var(--moon); overflow: hidden; background: linear-gradient(var(--night) 0, #343150 22%, #5b4d6c 55%, #8d6f80 100%); }
+.dusk + .dusk { border-top: 1.5rem solid var(--paper); }
+.dusk h2 { color: var(--moon); margin-bottom: 3rem; }
+.tag-letter { margin: 0 0 .2rem; text-align: center; color: #e8a08f; font-size: 1.05rem; }
+.dusk ul { list-style: none; margin: 0; padding: 0; }
+.dusk .year { color: #b8b2a6; margin: 0; }
+.dusk h3 { font-size: 1.5rem; letter-spacing: .06em; }
+.dusk li p:last-child { margin: .1rem 0 0; line-height: 1.35; }
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* a · lanterns */
+.lanterns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem 2rem; text-align: center; }
+.lanterns li:nth-child(even) { margin-top: 4rem; }
+.lanterns svg { width: 6rem; height: auto; overflow: visible; margin-bottom: .6rem; animation: rise 7s ease-in-out infinite; }
+.lanterns li:nth-child(2) svg { animation-delay: -2s; } .lanterns li:nth-child(3) svg { animation-delay: -4s; } .lanterns li:nth-child(4) svg { animation-delay: -5.5s; }
+@keyframes rise { 50% { transform: translateY(-9px) rotate(1.5deg); } }
+.lanterns p:last-child { max-width: 16rem; margin-inline: auto; }
+
+/* b · kites */
+.kites { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1rem; text-align: center; align-items: start; }
+.kites li:nth-child(1) { margin-top: 3rem; } .kites li:nth-child(3) { margin-top: 5rem; } .kites li:nth-child(4) { margin-top: 1.5rem; }
+.kites svg { display: block; width: 6.5rem; height: auto; margin: 0 auto -.4rem; overflow: visible; }
+.kites h3 { font-size: 1.35rem; }
+.kites p:last-child { font-size: 1.05rem; }
+
+/* c · small constellations */
+.figures { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3.5rem 2rem; text-align: center; position: relative; }
+.figures svg { display: block; width: 8rem; height: auto; margin: 0 auto .8rem; overflow: visible; }
+.figures p:last-child { max-width: 16rem; margin-inline: auto; }
+
+/* d · bottles */
+.dusk.shore { padding-bottom: 0; }
+.bottles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1rem; text-align: center; align-items: end; }
+.bottles li { display: flex; flex-direction: column; align-items: center; }
+.bottles svg { display: block; width: 4.6rem; height: auto; margin-top: 1rem; margin-bottom: -1.5rem; overflow: visible; transform: rotate(var(--r, 10deg)); }
+.bottles h3 { font-size: 1.35rem; }
+.bottles p:nth-of-type(2) { font-size: 1.05rem; }
+.waterline { display: block; width: 100%; height: 60px; position: relative; }
+
+@media (max-width: 640px) {
+  .kites, .bottles { grid-template-columns: repeat(2, 1fr); }
+  .kites li:nth-child(n) { margin-top: 0; } .kites li:nth-child(even) { margin-top: 2.5rem; }
+  .lanterns li:nth-child(even) { margin-top: 2.5rem; }
+  .lanterns svg { width: 4.6rem; }
+  .figures svg { width: 6rem; }
+  .bottles li:nth-child(-n+2) svg { margin-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .lanterns svg { animation: none; } }
