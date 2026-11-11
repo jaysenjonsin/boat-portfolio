@@ -158,6 +158,13 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .scrap:nth-child(even) { margin-top: 2.5rem; }
 .scrap .sheet div { background: var(--edge); padding: 1.1rem .8rem; }
 .scrap svg { display: block; width: 100%; max-width: 5rem; height: auto; margin: 0 auto; overflow: visible; }
+.defs { position: absolute; }
+/* the pictures ink themselves in when they come into view */
+.scrap :is(path, ellipse) { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.scrap.in :is(path, ellipse) { animation: sketch 1.8s cubic-bezier(.6, .05, .25, 1) .2s forwards; }
+.scrap.in :is(path, ellipse):nth-child(2) { animation-delay: .55s; }
+.scrap.in :is(path, ellipse):nth-child(3) { animation-delay: .9s; }
+.scrap.in :is(path, ellipse):nth-child(4) { animation-delay: 1.2s; }
 .arctic { display: block; width: 100%; height: 22rem; margin-top: 1rem; }
 /* hello */
 .hello { text-align: center; padding: 9rem 0 2.5rem; }
@@ -214,7 +221,14 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .mark path { stroke-dashoffset: 0; } .mark .dot, .reveal { opacity: 1; transform: none; }
+  .mark path, .scrap :is(path, ellipse) { stroke-dashoffset: 0; } .mark .dot, .reveal { opacity: 1; transform: none; }
+}
+
+/* small phones: keep the header on one line */
+@media (max-width: 430px) {
+  .nav { font-size: clamp(.7rem, 3.9vw, .95rem); letter-spacing: 0; padding: .65rem .8rem; gap: .6rem; align-items: baseline; }
+  .nav > a { white-space: nowrap; }
+  .nav nav { flex-wrap: nowrap; gap: clamp(.4rem, 2.2vw, .7rem); white-space: nowrap; }
 }
 
 /* flip between the three versions */
@@ -224,3 +238,4 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 .flip a[aria-current] { background: #25272e; color: #fcf9f1; }
 .flip { font-family: var(--hand); }
 footer { padding-bottom: 3rem; /* flip */ }
+@media (max-width: 560px) { .flip span { display: none; } .flip a { padding: .15rem .95rem; } }

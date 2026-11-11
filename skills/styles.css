@@ -1,0 +1,75 @@
+/* Five alternative drawings of the skills section. Builds on ../thread/styles.css. */
+.intro { min-height: 60svh; display: grid; align-content: center; justify-items: center; text-align: center; padding: 6rem 1.25rem 3rem; }
+.idea { padding: 4.5rem 0 6rem; }
+.idea h2 { margin-bottom: 2.6rem; }
+.tag-letter { margin: 0 0 .2rem; text-align: center; color: var(--red); font-size: 1.05rem; }
+.c0 { --cap: var(--red); --tint: #f6e3da; } .c1 { --cap: var(--teal); --tint: #dfeae4; }
+.c2 { --cap: var(--pen); --tint: #dfe5f0; } .c3 { --cap: var(--ochre); --tint: #f1e6c8; }
+.idea h3 { font-size: 1.05rem; color: var(--cap); }
+
+/* a · islands */
+.isles { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem 2.2rem; }
+.isle { position: relative; padding: 2.3rem 2rem 2.1rem; text-align: center; border: 1.2px solid var(--ink); border-radius: var(--blob); transform: rotate(var(--r, 0deg)); }
+.isle::before { content: ""; position: absolute; inset: .55rem; border: 1px dashed var(--cap); border-radius: inherit; opacity: .45; pointer-events: none; }
+.isle h3 { margin-bottom: .5rem; }
+.isle ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .1rem .9rem; font-size: 1.08rem; }
+.isle li::before { content: ""; display: inline-block; width: .3rem; height: .3rem; margin-right: .35rem; border: 1px solid var(--ink); border-radius: 50%; vertical-align: .12em; }
+.isles > svg { position: absolute; overflow: visible; pointer-events: none; }
+.isles .swell { width: 2.4rem; opacity: .55; }
+.isles .rose { width: 3.2rem; right: -1.2rem; top: -3.4rem; }
+.isles .skiff { width: 2.2rem; left: calc(50% - 1.1rem); top: calc(50% - 1.2rem); }
+
+/* b · rings */
+.rings { display: block; width: min(100%, 30rem); height: auto; margin: 0 auto; overflow: visible; }
+.rings text { font-family: var(--hand); font-size: 13.5px; font-weight: 400; }
+.legend { list-style: none; margin: 1.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .2rem 1.2rem; font-size: 1.02rem; }
+.legend li { color: var(--cap); }
+
+/* c · tags on a line */
+.hung-row { margin-bottom: 1.6rem; }
+.hung-row h3 { margin-bottom: .1rem; }
+.hung {
+  --row: 5.1rem;
+  list-style: none; margin: 0; padding: 0 .4rem; display: flex; flex-wrap: wrap; gap: 0 .65rem;
+  background: linear-gradient(transparent 7px, var(--ink) 7px 8.2px, transparent 8.2px) 0 0 / 100% var(--row);
+}
+.hung li { height: var(--row); padding-top: 8px; display: flex; flex-direction: column; align-items: center; transform-origin: top center; transform: rotate(var(--r, 0deg)); }
+.hung li::before { content: ""; width: 1px; height: var(--drop, 1rem); background: var(--ink); opacity: .7; }
+.hung span {
+  position: relative; padding: .7rem .7rem .3rem; font-size: 1.05rem; line-height: 1; white-space: nowrap;
+  background: var(--edge); border: 1.2px solid var(--ink);
+  clip-path: polygon(.5rem 0, calc(100% - .5rem) 0, 100% .5rem, 100% 100%, 0 100%, 0 .5rem);
+  box-shadow: inset 0 -3px 0 var(--tint);
+}
+.hung span::before { content: ""; position: absolute; left: 50%; top: .2rem; width: .3rem; height: .3rem; margin-left: -.15rem; border: 1px solid var(--ink); border-radius: 50%; }
+.hung li:hover { animation: swing 1.2s ease-in-out; }
+@keyframes swing { 25% { transform: rotate(calc(var(--r, 0deg) + 5deg)); } 60% { transform: rotate(calc(var(--r, 0deg) - 3deg)); } }
+
+/* d · pressed garden */
+.bed { margin-bottom: 2rem; }
+.bed ul { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr)); gap: 1.4rem .6rem; text-align: center; font-size: 1.02rem; line-height: 1.15; }
+.bed svg { display: block; width: 3.6rem; height: auto; margin: 0 auto .2rem; overflow: visible; }
+
+/* e · record */
+.album { display: flex; align-items: center; justify-content: center; }
+.disc { width: 14rem; flex: none; margin-right: -5.5rem; transition: transform 1.2s ease; }
+.album:hover .disc { transform: translateX(-2.2rem) rotate(40deg); }
+.sleeve {
+  position: relative; z-index: 1; flex: 1; max-width: 27rem; padding: 1.6rem 1.7rem 1.4rem;
+  background: var(--edge); border: 1.2px solid var(--ink); border-radius: 3px 5px 4px 6px;
+  box-shadow: 4px 5px 0 rgba(37, 39, 46, .12);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem 1.6rem;
+}
+.sleeve h3, .sleeve li, .bed li { overflow-wrap: anywhere; }
+.sleeve ol { margin: .2rem 0 0; padding: 0; list-style: none; counter-reset: track; font-size: 1.05rem; line-height: 1.35; }
+.sleeve li { counter-increment: track; }
+.sleeve li::before { content: counter(track) ". "; color: var(--soft); }
+
+@media (max-width: 640px) {
+  .isles { grid-template-columns: 1fr; gap: 2.4rem; }
+  .isles .skiff, .isles .rose { display: none; }
+  .album { flex-direction: column; }
+  .disc { margin: 0 0 -7rem; }
+  .album:hover .disc { transform: translateY(-2rem) rotate(40deg); }
+  .sleeve { width: 100%; gap: 1.1rem 1rem; padding: 1.3rem 1.2rem; }
+}

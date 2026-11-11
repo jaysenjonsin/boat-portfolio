@@ -287,7 +287,7 @@
     ];
     doodles.forEach(([, inner], i) => {
       const r = rng(700 + i * 29);
-      const paper = el('div', {}, art('0 0 80 80', `<g fill="none" stroke="${INK}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`));
+      const paper = el('div', {}, art('0 0 80 80', `<g filter="url(#rough)" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${inner.replace(/<(path|ellipse) /g, '<$1 pathLength="1" ')}</g>`));
       let poly = '';
       for (let k = 0; k <= 8; k++) poly += `${f(k * 12.5)}% ${f(r() * 3)}%,`;
       for (let k = 1; k <= 5; k++) poly += `${f(100 - r() * 3)}% ${k * 20}%,`;

@@ -189,6 +189,13 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
   .enso .bead { opacity: var(--o, 1); } .enso .star, .reveal { opacity: 1; transform: none; }
 }
 
+/* small phones: keep the header on one line */
+@media (max-width: 430px) {
+  .nav { font-size: clamp(.7rem, 3.9vw, .95rem); letter-spacing: 0; padding: .65rem .8rem; gap: .6rem; align-items: baseline; }
+  .nav > a { white-space: nowrap; }
+  .nav nav { flex-wrap: nowrap; gap: clamp(.4rem, 2.2vw, .7rem); white-space: nowrap; }
+}
+
 /* flip between the three versions */
 .flip { position: fixed; left: 50%; bottom: .9rem; transform: translateX(-50%); z-index: 45; display: flex; gap: .2rem; padding: .25rem; background: rgba(252, 249, 241, .92); border: 1px solid rgba(37, 39, 46, .45); border-radius: 999px; box-shadow: 0 2px 8px rgba(37, 39, 46, .18); font-size: .95rem; letter-spacing: .02em; white-space: nowrap; }
 .flip a { padding: .15rem .8rem; border-radius: 999px; text-decoration: none; color: #25272e; }
@@ -196,3 +203,4 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 .flip a[aria-current] { background: #25272e; color: #fcf9f1; }
 .flip { font-family: var(--hand); }
 footer { padding-bottom: 3rem; /* flip */ }
+@media (max-width: 560px) { .flip span { display: none; } .flip a { padding: .15rem .95rem; } }
