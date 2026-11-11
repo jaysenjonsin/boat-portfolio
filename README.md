@@ -5,7 +5,7 @@ One portfolio, drawn three ways; a small switcher at the bottom of each page fli
 - `index.html` — landing page linking to all three versions
 - `thread/` — the working version: a pen line runs from a sketched J through a field of writing, a night-sky constellation for work with a shooting star or rocket travelling along it, index cards for side projects, a keyboard of skills, and a winter shore under a line of music that plays as the page scrolls
 - `skills/` — a scratch page with five alternative drawings of the skills section (islands, growth rings, tags on a line, a pressed garden, a record sleeve)
-- `story-e/` — the current direction, one story top to bottom: stars, a sunset over the side projects, a sea whose waves are the music staff, a beach of skills; builds on the pen line styles
+- `story-e/` — the current direction, one story top to bottom: stars, a sunset where each side project is its own small constellation, a sea whose waves are the music staff, a beach of skills; builds on the pen line styles
 - `side/` — a scratch page with four ways to show the side projects in the sunset sky (lanterns, kites, small constellations, bottles)
 - `scribble/` — the first pass at the pen-line style: scribbled writing, blossom branches, paper scraps, a stitched skills sampler
 - `ink/` — brush ink on paper: a voyage through work, lanterns for side projects, constellations for skills

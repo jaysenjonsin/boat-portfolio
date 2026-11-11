@@ -170,34 +170,37 @@
     join();
   })();
 
-  /* ---------- projects: index cards with a doodle each ---------- */
-  const cardArt = {
-    // a paper plane and the loop it just flew
-    Amelia: `<path d="M8 62c14 10 30 0 22-12-6-9-18 2-8 9" fill="none" stroke="${INK}" stroke-width="1" stroke-dasharray="2 4" stroke-linecap="round"/>
-      <g ${line}><path d="M24 44l48-26-18 46-9-16Z"/><path d="M45 48l27-30"/></g>`,
-    // a stack of flashcards
-    Knoted: `<g ${line} fill="#fcf9f1"><rect x="20" y="20" width="44" height="30" rx="2" transform="rotate(-9 42 35)"/><rect x="20" y="26" width="44" height="30" rx="2" transform="rotate(4 42 41)"/><rect x="18" y="34" width="44" height="30" rx="2"/></g>
-      <path ${accent} stroke-width="1.2" d="M25 44h22M25 51h30M25 57h14"/>`,
-    // a spark over a clipboard
-    Ignition: `<g ${line}><rect x="20" y="22" width="40" height="50" rx="3"/><path d="M32 22v-5h16v5"/><path d="M28 40h24M28 50h24M28 60h14"/></g>
-      <path ${accent} d="M66 10v9M66 31v9M51 25h9M72 25h9M56 15l5 5M76 15l-5 5M56 35l5-5M76 35l-5-5"/>`,
-    // a ticket stub
-    EventFinder: `<g ${line}><path d="M10 28h60v9a6 6 0 0 0 0 12v9H10v-9a6 6 0 0 0 0-12Z" transform="rotate(-8 40 43)"/><path d="M52 27v33" stroke-dasharray="2 4" transform="rotate(-8 40 43)"/></g>
-      <path ${accent} stroke-width="1.2" d="M30 34l2.6 6 6.4.5-4.9 4.2 1.6 6.3-5.7-3.5-5.7 3.5 1.6-6.3-4.9-4.2 6.4-.5Z" transform="rotate(-8 40 43)"/>`,
-  };
-
-  PROJECTS.filter((p) => p.category === 'project').forEach((p, i) => {
-    const r = rng(900 + i * 41);
-    const li = el('li', { className: 'card reveal' },
-      art('0 0 80 80', cardArt[p.id] || ''),
-      el('p', { className: 'year', textContent: p.year }),
-      el('h3', { textContent: p.title }),
-      el('p', { textContent: p.description }),
-      moreBtn(p));
-    li.style.transform = `rotate(${f((r() - 0.5) * 3.6)}deg)`;
-    li.style.setProperty('--tape', `${f((r() - 0.5) * 10)}deg`);
-    $('cards').append(li);
-  });
+  /* ---------- side projects: each one its own small constellation ---------- */
+  (() => {
+    const MOON = '#e8e3d4', r = rng(19);
+    // star positions for each figure, joined in order
+    const shapes = {
+      Amelia: [[[14, 52], [88, 16], [62, 80], [50, 54], [14, 52]], [[50, 54], [88, 16]]],                       // a paper plane
+      Knoted: [[[22, 30], [78, 24], [82, 62], [26, 68], [22, 30]], [[36, 44], [66, 41]], [[38, 55], [58, 53]]],   // a card with lines
+      Ignition: [[[50, 12], [50, 84]], [[14, 48], [86, 48]], [[26, 24], [74, 72]], [[74, 24], [26, 72]]],         // a spark
+      EventFinder: [[[12, 30], [88, 30], [88, 44], [82, 50], [88, 56], [88, 70], [12, 70], [12, 56], [18, 50], [12, 44], [12, 30]], [[62, 34], [62, 66]]], // a ticket
+    };
+    PROJECTS.filter((p) => p.category === 'project').forEach((p) => {
+      const lines = shapes[p.id] || [[[20, 50], [80, 50]]];
+      let s = '';
+      lines.forEach((pts) => { s += `<path d="${pts.map(([x, y], k) => `${k ? 'L' : 'M'}${x} ${y}`).join('')}" fill="none" stroke="${MOON}" stroke-width=".8" stroke-linecap="round" stroke-dasharray="1.5 5" opacity=".6"/>`; });
+      const seen = new Set();
+      lines.flat().forEach(([x, y], k) => {
+        const key = `${x},${y}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        s += k === 1 // one brighter star per figure
+          ? `<path d="M${x - 6} ${y}h12M${x} ${y - 6}v12M${x - 3.5} ${y - 3.5}l7 7M${x + 3.5} ${y - 3.5}l-7 7" fill="none" stroke="${MOON}" stroke-width=".9" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="2.2" fill="#e8a08f"/>`
+          : `<circle cx="${x}" cy="${y}" r="${f(1.4 + r() * 1.2)}" fill="${MOON}"/>`;
+      });
+      $('figures').append(el('li', { className: 'reveal' },
+        art('0 0 100 96', s),
+        el('p', { className: 'year', textContent: p.year }),
+        el('h3', { textContent: p.title }),
+        el('p', { textContent: p.description }),
+        moreBtn(p)));
+    });
+  })();
 
   /* ---------- one motion, many marks ---------- */
   (() => {

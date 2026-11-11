@@ -65,7 +65,14 @@
 [data-story="d"] .field { padding-bottom: 2rem; }
 
 /* ---------- e · sunset to sea: the water story, with the night fading through a sunset before the sky meets the sea ---------- */
-[data-story="e"] #projects { background: linear-gradient(var(--night) 0, #343150 16%, #6e5a72 38%, #c59f96 70%, var(--blush) 100%); padding-bottom: 8rem; }
+[data-story="e"] #projects { background: linear-gradient(var(--night) 0, #343150 22%, #5b4d6c 52%, #8d6f80 76%, #c59f96 91%, var(--blush) 100%); padding-bottom: 13rem; color: var(--moon); }
+.figures { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 3.8rem 2rem; text-align: center; }
+.figures svg { display: block; width: 8rem; height: auto; margin: 0 auto .8rem; overflow: visible; }
+.figures .year { color: #b8b2a6; }
+.figures h3 { font-size: 1.5rem; letter-spacing: .06em; }
+.figures p { margin: .1rem auto .5rem; max-width: 16rem; line-height: 1.35; }
+.figures .more { color: #f0b9a8; }
+@media (max-width: 640px) { .figures { gap: 3rem 1rem; } .figures svg { width: 6rem; } }
 [data-story="e"] #projects h2 { color: var(--moon); }
 
 @media (max-width: 640px) {
