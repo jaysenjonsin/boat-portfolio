@@ -95,51 +95,20 @@
     t.append(svg('path', { d, fill: 'currentColor' }));
   });
 
-  /* ---------- water: two thin wave lines per strip, tiled so the drift loops ---------- */
-  document.querySelectorAll('.waves').forEach((w, n) => {
-    [[13, INK, 1.1, 0.85, 0], [30, '#3c5a94', 1, 0.6, -14]].forEach(([y, stroke, width, opacity, shift]) => {
-      const d = `M${shift - 60} ${y}q15 ${n ? -8 : -10} 30 0` + 't30 0'.repeat(46);
-      w.append(svg('path', { d, fill: 'none', stroke, 'stroke-width': width, 'stroke-linecap': 'round', opacity, 'vector-effect': 'non-scaling-stroke' }));
-    });
-  });
-
-  /* ---------- summer: a sun and two clouds over the water ---------- */
+  /* ---------- fall: a few leaves in outline, settled along the bottom and the edges ---------- */
   (() => {
-    let rays = '';
-    for (let k = 0; k < 14; k++) {
-      const a = (k / 14) * Math.PI * 2, r1 = 30, r2 = k % 2 ? 40 : 46;
-      rays += `M${f(50 + r1 * Math.cos(a))} ${f(50 + r1 * Math.sin(a))}L${f(50 + r2 * Math.cos(a))} ${f(50 + r2 * Math.sin(a))}`;
-    }
-    const cloud = `<path d="M14 40q-12 -2 -10 -12q2 -9 13 -8q3 -13 17 -12q11 1 14 10q12 -4 17 6q11 0 11 9q0 8 -10 8Z" fill="#fcf9f1" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"/>`;
-    $('summer').innerHTML = `
-      <svg class="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#f4d98a" stroke="${INK}" stroke-width="1.3"/>
-        <path class="rays" d="${rays}" fill="none" stroke="${INK}" stroke-width="1.2" stroke-linecap="round"/></svg>
-      <svg class="cloud" viewBox="0 0 80 46" style="top:3.2rem"></svg><svg class="cloud" viewBox="0 0 80 46" style="top:8.5rem"></svg>`;
-    $('summer').querySelectorAll('.cloud').forEach((c) => { c.innerHTML = cloud; });
-  })();
-
-  /* ---------- fall: leaves gathered at the edges, a few still coming down ---------- */
-  (() => {
-    const r = rng(121), tones = ['#c8742c', '#b0482e', '#a97b22', '#8a5a2b', '#d19a3a'];
-    const leaf = (tone) => art('0 0 24 30', `<path d="M12 2Q22 10 12 26Q2 10 12 2Z" fill="${tone}" fill-opacity=".55" stroke="${tone}" stroke-width="1.1" stroke-linejoin="round"/>
-      <path d="M12 6V29M12 12l4 -3M12 16l-4 -3M12 20l3.5 -2.5" fill="none" stroke="${tone}" stroke-width=".8" stroke-linecap="round"/>`);
-    const place = (x, y, falling) => {
-      const l = leaf(tones[Math.floor(r() * tones.length)]);
-      l.style.left = `${f(x)}%`;
-      l.style.setProperty('--s', `${f(1.1 + r() * 1)}rem`);
-      if (falling) {
-        l.classList.add('falling');
-        l.style.setProperty('--t', `${f(11 + r() * 9)}s`);
-        l.style.animationDelay = `${f(-r() * 18)}s`;
-      } else {
-        l.style.top = `${f(y)}%`;
-        l.style.setProperty('--r', `${f(r() * 360)}deg`);
-      }
+    const r = rng(121), tones = ['#8a6a4a', '#9a7a52', '#7d6a5a'];
+    const place = (x, y) => {
+      const tone = tones[Math.floor(r() * tones.length)];
+      const l = art('0 0 24 30', `<path d="M12 2Q22 10 12 26Q2 10 12 2Z" fill="none" stroke="${tone}" stroke-width="1" stroke-linejoin="round"/>
+        <path d="M12 6V29M12 12l4 -3M12 16l-4 -3M12 20l3.5 -2.5" fill="none" stroke="${tone}" stroke-width=".7" stroke-linecap="round"/>`);
+      l.style.left = `${f(x)}%`; l.style.top = `${f(y)}%`;
+      l.style.setProperty('--s', `${f(1 + r() * 0.8)}rem`);
+      l.style.setProperty('--r', `${f(r() * 360)}deg`);
       $('leaves').append(l);
     };
-    for (let k = 0; k < 34; k++) place(r() * 98, 91 + r() * 6);                       // the pile along the bottom
-    for (let k = 0; k < 10; k++) place(r() < 0.5 ? r() * 9 : 89 + r() * 9, 12 + r() * 74); // strays at the edges
-    for (let k = 0; k < 9; k++) place(4 + r() * 90, 0, true);                         // still falling
+    for (let k = 0; k < 13; k++) place(r() * 98, 92 + r() * 5);
+    for (let k = 0; k < 6; k++) place(r() < 0.5 ? r() * 8 : 90 + r() * 8, 14 + r() * 70);
   })();
 
   /* ---------- work: a small sketch for each job ---------- */
@@ -227,10 +196,9 @@
     }
     $('flock').append(g);
     // a few of the marks have become birds
-    [[505, 118, 1, 0], [560, 86, 0.85, 1], [612, 128, 0.7, 0], [628, 56, 1.1, 1], [676, 92, 0.8, 0], [452, 70, 0.75, 1], [690, 28, 0.9, 0]].forEach(([bx, by, s, red], k) => {
+    [[505, 118, 1, 0], [560, 86, 0.85, 1], [612, 128, 0.7, 0], [628, 56, 1.1, 1], [676, 92, 0.8, 0], [452, 70, 0.75, 1], [690, 28, 0.9, 0]].forEach(([bx, by, s, red]) => {
       const b = svg('g', { fill: 'none', stroke: red ? RED : INK, 'stroke-width': 1.1, 'stroke-linecap': 'round', transform: `translate(${bx} ${by}) rotate(${f((r() - 0.5) * 30)}) scale(${s})` });
-      const wing = svg('path', { class: 'wing', d: 'M-2.5 0q-8 -12 -17 -5M2.5 0q8 -12 17 -5' });
-      wing.style.animationDelay = `${f(-k * 0.17)}s`;
+      const wing = svg('path', { d: 'M-2.5 0q-8 -12 -17 -5M2.5 0q8 -12 17 -5' });
       b.append(svg('circle', { r: 2.5 }), wing);
       $('flock').append(b);
     });
@@ -336,8 +304,8 @@
   (() => {
     const r = rng(58), SNOW = '#fcf9f1', ICE = '#dce7ea', BEAK = '#d98a2b';
     const pen = `stroke="${INK}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"`;
-    const penguin = (x, y, s, dir, waddle) => `
-      <g transform="translate(${x} ${y}) scale(${s * dir} ${s})"><g${waddle ? ' class="waddle"' : ''}>
+    const penguin = (x, y, s, dir) => `
+      <g transform="translate(${x} ${y}) scale(${s * dir} ${s})"><g>
         <path d="M-9 20l-7 5M9 20l7 5" fill="none" stroke="${BEAK}" stroke-width="2.4" stroke-linecap="round"/>
         <path d="M0 -62C17 -62 24 -32 22 0C21 14 12 21 0 21C-12 21 -21 14 -22 0C-24 -32 -17 -62 0 -62Z" fill="${INK}" ${pen}/>
         <path d="M4 -46C14 -44 17 -22 15 0C14 10 9 16 1 16C-7 16 -12 10 -12 0C-12 -20 -8 -40 4 -46Z" fill="${SNOW}"/>
@@ -350,7 +318,7 @@
       for (let k = 1; k < 7; k++) { const t = k / 7; hatch += `M${f(x1 + (x2 - x1) * t)} ${f(y1 + (y2 - y1) * t)}l${f(-(8 + r() * 14) * (1.2 - t))} ${f(4 + r() * 5)}`; }
     });
     let snow = '';
-    for (let k = 0; k < 46; k++) snow += `<circle class="snow" cx="${f(r() * 1200)}" cy="${f(r() * 300)}" r="${f(1 + r() * 1.6)}" fill="${SNOW}" style="animation-delay:${f(-r() * 9)}s"/>`;
+    for (let k = 0; k < 22; k++) snow += `<circle class="snow" cx="${f(r() * 1200)}" cy="${f(r() * 300)}" r="${f(1 + r() * 1.6)}" fill="${SNOW}" style="animation-delay:${f(-r() * 16)}s"/>`;
     let prints = '';
     for (let k = 0; k < 9; k++) prints += `<ellipse cx="${f(742 - k * 26)}" cy="${f(396 + Math.sin(k * 0.8) * 5 + (k % 2) * 5)}" rx="3" ry="1.6" fill="${INK}" opacity=".3"/>`;
     $('arctic').innerHTML = `
@@ -363,11 +331,11 @@
       <path d="${hatch}" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".55"/>
       <path d="M0 338Q150 312 330 330T700 326 1010 322 1200 336V460H0Z" fill="${SNOW}" ${pen} stroke-width="1"/>
       <path d="M120 356q40 -6 84 0M430 350q30 -5 66 0M880 348q44 -6 92 0M1080 372q30 -4 60 0" fill="none" stroke="${INK}" stroke-width=".7" stroke-linecap="round" opacity=".4"/>
-      ${penguin(214, 372, 0.8, 1)}${penguin(262, 384, 1, -1, true)}${penguin(322, 378, 0.72, 1)}
-      ${penguin(1010, 380, 0.9, -1, true)}${penguin(1060, 392, 0.62, -1)}
+      ${penguin(214, 372, 0.8, 1)}${penguin(262, 384, 1, -1)}${penguin(322, 378, 0.72, 1)}
+      ${penguin(1010, 380, 0.9, -1)}${penguin(1060, 392, 0.62, -1)}
       ${prints}
       <g transform="translate(748 302) scale(1.05)">
-        <path class="tail" d="M86 92Q118 102 134 82Q144 64 126 56Q132 74 114 80Q98 84 86 80Z" fill="${SNOW}" ${pen}/>
+        <path d="M86 92Q118 102 134 82Q144 64 126 56Q132 74 114 80Q98 84 86 80Z" fill="${SNOW}" ${pen}/>
         <path d="M22 52L8 48Q4 44 11 41L24 34 23 16 35 27Q41 25 46 28L55 17 56 36Q61 46 57 56Q80 60 88 78Q93 90 90 100H38Q43 88 39 77Q34 64 22 52Z" fill="${SNOW}" ${pen}/>
         <path d="M54 78Q50 90 52 100M66 100Q64 92 70 86" fill="none" ${pen} stroke-width="1"/>
         <circle cx="8.5" cy="45" r="2" fill="${INK}"/><path d="M22 40q3 -2 6 0" fill="none" ${pen}/>
@@ -383,7 +351,7 @@
   })();
 
   /* ---------- the thread: leaves the J's hook, ends by starting the next J ---------- */
-  const thread = $('thread'), pen = thread.querySelector('path'), boat = $('boat');
+  const thread = $('thread'), pen = thread.querySelector('path');
   let total = 0;
   const anchor = (node, [vx, vy]) => {
     const b = node.getBoundingClientRect(), s = b.width / 280;
@@ -411,7 +379,7 @@
     pull();
   };
   const pull = () => {
-    // the line is drawn down to a point a little past mid-screen, and the boat rides its tip
+    // the line is drawn down to a point a little past mid-screen
     const max = document.documentElement.scrollHeight - innerHeight, frac = max > 0 ? Math.min(1, scrollY / max) : 1;
     let len = total;
     if (!still && frac < 0.995) {
@@ -424,8 +392,6 @@
       len = lo;
     }
     pen.style.strokeDashoffset = total - len;
-    const tip = pen.getPointAtLength(len);
-    boat.setAttribute('transform', `translate(${f(tip.x)} ${f(tip.y - 12)})`);
   };
   let tick = false;
   addEventListener('scroll', () => {

@@ -2,8 +2,8 @@
   --paper: #f5f0e4;
   --edge: #fcf9f1;
   --blue: #dde5e6;
-  --wheat: #eedfc0;
-  --spring: #e1e8d4;
+  --wheat: #efe7d3;
+  --spring: #e6eadb;
   --blush: #efe0d6;
   --ink: #25272e;
   --soft: #77756f;
@@ -69,7 +69,7 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 
 /* bands with torn edges */
 .band { position: relative; padding: 5rem 0 6rem; }
-.band.blue { background: var(--blue); padding-bottom: 8rem; }
+.band.blue { background: var(--blue); }
 .band.wheat { background: var(--wheat); }
 .band.spring { background: var(--spring); }
 .band.paper { background: var(--paper); }
@@ -84,30 +84,14 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 }
 .more:hover { border-bottom-style: solid; }
 
-/* water: thin waves drifting across the work band, and a boat that sails the pen line */
-.sea { overflow: hidden; margin: -1.5rem 0 3rem; position: relative; z-index: 2; }
-.sea.low { position: absolute; left: 0; right: 0; bottom: 1.2rem; margin: 0; }
-.waves { display: block; width: 200%; height: 40px; animation: drift 18s linear infinite; }
-.sea.low .waves { animation-duration: 26s; animation-direction: reverse; opacity: .7; }
-@keyframes drift { to { transform: translateX(-50%); } }
-#boat .bob { animation: bob 4s ease-in-out infinite; transform-origin: 0 10px; }
-@keyframes bob { 0%, 100% { transform: translateY(-2px) rotate(-5deg); } 50% { transform: translateY(2px) rotate(5deg); } }
-
-/* summer over the water: a sun and slow clouds */
-.summer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.summer svg { position: absolute; overflow: visible; }
-.summer .sun { right: 7%; top: 2.2rem; width: 6.5rem; }
-.summer .sun .rays { transform-box: fill-box; transform-origin: center; animation: spin 60s linear infinite; }
-.summer .cloud { width: 8rem; animation: sail 70s linear infinite; }
-.summer .cloud + .cloud { width: 5.5rem; animation-duration: 95s; animation-delay: -40s; }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes sail { from { transform: translateX(-12rem); } to { transform: translateX(100vw); } }
-
-/* work */
-.jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 3.5rem; }
-.job { display: grid; grid-template-columns: 7rem 1fr; gap: 1.6rem; align-items: center; }
-.job:nth-child(even) { grid-template-columns: 1fr 7rem; text-align: right; }
-.job:nth-child(even) svg { order: 2; }
+/* work: a dotted route with a small boat that keeps pace down the page */
+.route { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1.4rem; }
+.rail { background: repeating-linear-gradient(to bottom, var(--soft) 0 2px, transparent 2px 11px) center / 1px 100% no-repeat; }
+.boat { position: sticky; top: 44vh; display: block; width: 100%; background: var(--blue); padding: .5rem 0; }
+.boat g { animation: bob 6s ease-in-out infinite; transform-origin: 0 10px; }
+@keyframes bob { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+.jobs { list-style: none; margin: 0; padding: 0 0 2rem; display: grid; gap: 3.8rem; }
+.job { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1.4rem; align-items: center; }
 .job svg { width: 100%; height: auto; overflow: visible; }
 .job h3 { font-size: 1.7rem; letter-spacing: .06em; }
 .job p { margin: .1rem 0 .5rem; }
@@ -116,8 +100,6 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .flock { display: block; width: min(100%, 44rem); margin: -2rem auto 1rem; }
 .grass { position: absolute; left: 0; bottom: 0; width: 100%; height: 70px; display: block; }
 .band.spring { padding-bottom: 9rem; }
-.flock .wing { transform-box: fill-box; transform-origin: center bottom; animation: flap 1.1s ease-in-out infinite; }
-@keyframes flap { 50% { transform: scaleY(.35); } }
 .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.8rem 2rem; }
 .card {
   position: relative; text-align: center; padding: 1.9rem 1.3rem 1.4rem;
@@ -137,18 +119,10 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .card p { margin: 0 0 .4rem; line-height: 1.8rem; }
 .card .year { line-height: 1.8rem; }
 
-/* fall: leaves around the keys */
-.leaves { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
-.leaves svg { position: absolute; width: var(--s, 1.6rem); height: auto; overflow: visible; transform: rotate(var(--r, 0deg)); }
-.leaves .falling { top: -3rem; animation: leaf-fall var(--t, 14s) linear infinite; }
-@keyframes leaf-fall {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-  8% { opacity: .9; }
-  50% { transform: translate(3.5rem, 22rem) rotate(200deg); }
-  92% { opacity: .9; }
-  100% { transform: translate(-1rem, 46rem) rotate(380deg); opacity: 0; }
-}
-.band.wheat { padding-bottom: 8rem; }
+/* fall: a few pale leaves around the keys */
+.leaves { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; opacity: .5; }
+.leaves svg { position: absolute; width: var(--s, 1.4rem); height: auto; overflow: visible; transform: rotate(var(--r, 0deg)); }
+.band.wheat { padding-bottom: 7rem; }
 
 /* skills: a keyboard */
 .keyrow { margin: 0 0 1.5rem; }
@@ -178,19 +152,15 @@ h2 { font-size: 1.35rem; text-align: center; margin-bottom: 3rem; }
 .staff { display: block; width: 100%; height: 110px; margin: 3.5rem 0 3rem; overflow: visible; }
 .staff .note { opacity: .28; transition: opacity .35s ease; transform-box: fill-box; transform-origin: center bottom; }
 .staff .note.on { opacity: 1; animation: hop .5s cubic-bezier(.3, 1.5, .5, 1); }
-@keyframes hop { 0% { transform: translateY(0) scale(1); } 35% { transform: translateY(-11px) scale(1.12); } 100% { transform: translateY(0) scale(1); } }
+@keyframes hop { 0% { transform: translateY(0) scale(1); } 35% { transform: translateY(-6px); } 100% { transform: translateY(0) scale(1); } }
 .notes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; font-size: 1.05rem; }
 .scrap .sheet { filter: drop-shadow(2px 3px 0 rgba(37, 39, 46, .2)); }
 .scrap:nth-child(even) { margin-top: 2.5rem; }
 .scrap .sheet div { background: var(--edge); padding: 1.1rem .8rem; }
 .scrap svg { display: block; width: 100%; max-width: 5rem; height: auto; margin: 0 auto; overflow: visible; }
 .arctic { display: block; width: 100%; height: 26rem; margin-top: 1rem; }
-.arctic .waddle { transform-box: fill-box; transform-origin: bottom center; animation: waddle 1.6s ease-in-out infinite; }
-@keyframes waddle { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-.arctic .tail { transform-box: fill-box; transform-origin: left bottom; animation: swish 4s ease-in-out infinite; }
-@keyframes swish { 50% { transform: rotate(-7deg); } }
-.arctic .snow { animation: fall 9s linear infinite; }
-@keyframes fall { from { transform: translateY(-40px); opacity: 0; } 15%, 80% { opacity: .9; } to { transform: translateY(120px); opacity: 0; } }
+.arctic .snow { animation: fall 16s linear infinite; }
+@keyframes fall { from { transform: translateY(-40px); opacity: 0; } 15%, 80% { opacity: .8; } to { transform: translateY(120px); opacity: 0; } }
 
 /* hello */
 .hello { text-align: center; padding: 9rem 0 2.5rem; }
@@ -233,8 +203,8 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 @media (max-width: 640px) {
   body { font-size: 1.15rem; }
   .nav { font-size: .95rem; padding: .7rem 1rem; }
-  .job, .job:nth-child(even) { grid-template-columns: 4.8rem 1fr; text-align: left; gap: 1rem; }
-  .job:nth-child(even) svg { order: 0; }
+  .route { grid-template-columns: 2.4rem 1fr; gap: .9rem; }
+  .job { grid-template-columns: 3.6rem 1fr; gap: .9rem; }
   .cards { grid-template-columns: 1fr; gap: 3.4rem; }
   .keyrow:nth-child(n) { padding-left: 0; }
   .notes { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; padding: 0 1.5rem; }
