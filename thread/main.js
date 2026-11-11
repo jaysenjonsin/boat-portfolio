@@ -103,6 +103,45 @@
     });
   });
 
+  /* ---------- summer: a sun and two clouds over the water ---------- */
+  (() => {
+    let rays = '';
+    for (let k = 0; k < 14; k++) {
+      const a = (k / 14) * Math.PI * 2, r1 = 30, r2 = k % 2 ? 40 : 46;
+      rays += `M${f(50 + r1 * Math.cos(a))} ${f(50 + r1 * Math.sin(a))}L${f(50 + r2 * Math.cos(a))} ${f(50 + r2 * Math.sin(a))}`;
+    }
+    const cloud = `<path d="M14 40q-12 -2 -10 -12q2 -9 13 -8q3 -13 17 -12q11 1 14 10q12 -4 17 6q11 0 11 9q0 8 -10 8Z" fill="#fcf9f1" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"/>`;
+    $('summer').innerHTML = `
+      <svg class="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#f4d98a" stroke="${INK}" stroke-width="1.3"/>
+        <path class="rays" d="${rays}" fill="none" stroke="${INK}" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <svg class="cloud" viewBox="0 0 80 46" style="top:3.2rem"></svg><svg class="cloud" viewBox="0 0 80 46" style="top:8.5rem"></svg>`;
+    $('summer').querySelectorAll('.cloud').forEach((c) => { c.innerHTML = cloud; });
+  })();
+
+  /* ---------- fall: leaves gathered at the edges, a few still coming down ---------- */
+  (() => {
+    const r = rng(121), tones = ['#c8742c', '#b0482e', '#a97b22', '#8a5a2b', '#d19a3a'];
+    const leaf = (tone) => art('0 0 24 30', `<path d="M12 2Q22 10 12 26Q2 10 12 2Z" fill="${tone}" fill-opacity=".55" stroke="${tone}" stroke-width="1.1" stroke-linejoin="round"/>
+      <path d="M12 6V29M12 12l4 -3M12 16l-4 -3M12 20l3.5 -2.5" fill="none" stroke="${tone}" stroke-width=".8" stroke-linecap="round"/>`);
+    const place = (x, y, falling) => {
+      const l = leaf(tones[Math.floor(r() * tones.length)]);
+      l.style.left = `${f(x)}%`;
+      l.style.setProperty('--s', `${f(1.1 + r() * 1)}rem`);
+      if (falling) {
+        l.classList.add('falling');
+        l.style.setProperty('--t', `${f(11 + r() * 9)}s`);
+        l.style.animationDelay = `${f(-r() * 18)}s`;
+      } else {
+        l.style.top = `${f(y)}%`;
+        l.style.setProperty('--r', `${f(r() * 360)}deg`);
+      }
+      $('leaves').append(l);
+    };
+    for (let k = 0; k < 34; k++) place(r() * 98, 91 + r() * 6);                       // the pile along the bottom
+    for (let k = 0; k < 10; k++) place(r() < 0.5 ? r() * 9 : 89 + r() * 9, 12 + r() * 74); // strays at the edges
+    for (let k = 0; k < 9; k++) place(4 + r() * 90, 0, true);                         // still falling
+  })();
+
   /* ---------- work: a small sketch for each job ---------- */
   const line = `fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"`;
   const accent = `fill="none" stroke="${RED}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
@@ -187,6 +226,14 @@
       g.append(svg('line', { x1: f(x), y1: f(y), x2: f(x + L * Math.cos(a)), y2: f(y + L * Math.sin(a)), 'stroke-width': f(0.6 + r() * 0.8), opacity: f(0.35 + r() * 0.6) }));
     }
     $('flock').append(g);
+    // a few of the marks have become birds
+    [[505, 118, 1, 0], [560, 86, 0.85, 1], [612, 128, 0.7, 0], [628, 56, 1.1, 1], [676, 92, 0.8, 0], [452, 70, 0.75, 1], [690, 28, 0.9, 0]].forEach(([bx, by, s, red], k) => {
+      const b = svg('g', { fill: 'none', stroke: red ? RED : INK, 'stroke-width': 1.1, 'stroke-linecap': 'round', transform: `translate(${bx} ${by}) rotate(${f((r() - 0.5) * 30)}) scale(${s})` });
+      const wing = svg('path', { class: 'wing', d: 'M-2.5 0q-8 -12 -17 -5M2.5 0q8 -12 17 -5' });
+      wing.style.animationDelay = `${f(-k * 0.17)}s`;
+      b.append(svg('circle', { r: 2.5 }), wing);
+      $('flock').append(b);
+    });
   })();
 
   (() => {
@@ -224,24 +271,42 @@
     const tune = [[1, 1], [3, 1], [5, 2], [6, 1], [5, 1], [3, 2], [2, 1], [3, 1], [5, 1], [8, 1], [6, 2], [5, 2],
                   [8, 1], [6, 1], [5, 2], [3, 1], [2, 1], [1, 2], [2, 1], [3, 1], [5, 1], [3, 1], [2, 2], [1, 4]];
     const notes = svg('g', { stroke: INK, 'stroke-width': 1.1, 'stroke-linecap': 'round' });
+    const played = [];
     let x = 26, i = 0, prev = null;
     while (x < 1185) {
       const [step, beats] = tune[i % tune.length];
       const y = 70 - step * 4.5 + drift(x), up = step < 5, red = i % 11 === 4;
       const sx = up ? x + 4.2 : x - 4.2, sy = up ? y - 26 : y + 26, col = red ? RED : INK;
-      notes.append(
+      const note = svg('g', { class: 'note' });
+      note.append(
         svg('ellipse', { cx: f(x), cy: f(y), rx: 4.6, ry: 3.3, transform: `rotate(-22 ${f(x)} ${f(y)})`, fill: beats >= 2 ? 'none' : col, stroke: col }),
         svg('line', { x1: f(sx), y1: f(y), x2: f(sx), y2: f(sy), stroke: col }));
       // tie two quick notes that lean the same way
       if (prev && prev.beats === 1 && beats === 1 && prev.up === up && !prev.tied && !red && !prev.red) {
-        notes.append(svg('line', { x1: f(prev.sx), y1: f(prev.sy), x2: f(sx), y2: f(sy), 'stroke-width': 2.6 }));
+        note.append(svg('line', { x1: f(prev.sx), y1: f(prev.sy), x2: f(sx), y2: f(sy), 'stroke-width': 2.6 }));
         prev = { tied: true };
       } else prev = { sx, sy, up, beats, red };
       if ((i + 1) % 8 === 0) notes.append(svg('line', { x1: f(x + 17), y1: f(34 + drift(x + 17)), x2: f(x + 17), y2: f(70 + drift(x + 17)), 'stroke-width': 0.7, opacity: 0.6 }));
+      notes.append(note);
+      played.push([x, note]);
       x += 22 + beats * 9;
       i++;
     }
     staff.append(lines, notes);
+
+    // scrolling plays the tune: each note hops and inks in as the reading point passes it,
+    // and fades back if the page is scrolled up again
+    const play = () => {
+      const box = staff.getBoundingClientRect();
+      if (box.bottom < -200 || box.top > innerHeight + 200) return;
+      const scale = Math.max(box.width / 1200, box.height / 110), half = box.width / scale / 2;
+      const t = still ? 1 : Math.max(0, Math.min(1, (innerHeight * 0.92 - box.top) / (innerHeight * 0.6)));
+      const head = 600 - half + t * (half * 2 + 20);
+      played.forEach(([nx, note]) => note.classList.toggle('on', nx <= head));
+    };
+    addEventListener('scroll', play, { passive: true });
+    addEventListener('resize', play);
+    play();
   })();
 
   /* ---------- small paper notes, one per pastime ---------- */
@@ -252,7 +317,7 @@
       ['making music', '<path d="M30 56V18l30-6v38"/><path d="M30 28l30-6"/><ellipse cx="22" cy="57" rx="8" ry="6"/><ellipse cx="52" cy="51" rx="8" ry="6"/>'],
       ['the movies', '<path d="M22 34l5 34h26l5-34Z"/><path d="M32 35l2 33M40 35v33M48 35l-2 33"/><path d="M22 34q-3-9 6-9q1-9 10-6q6-7 12 1q9-2 8 8q4 5 0 6"/>'],
     ];
-    doodles.forEach(([label, inner], i) => {
+    doodles.forEach(([, inner], i) => {
       const r = rng(700 + i * 29);
       const paper = el('div', {}, art('0 0 80 80', `<g fill="none" stroke="${INK}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`));
       let poly = '';
@@ -261,7 +326,7 @@
       for (let k = 8; k >= 0; k--) poly += `${f(k * 12.5)}% ${f(100 - r() * 3)}%,`;
       for (let k = 4; k >= 1; k--) poly += `${f(r() * 3)}% ${k * 20}%,`;
       paper.style.clipPath = `polygon(${poly.slice(0, -1)})`;
-      const li = el('li', { className: 'scrap reveal' }, el('div', { className: 'sheet' }, paper), label);
+      const li = el('li', { className: 'scrap reveal' }, el('div', { className: 'sheet' }, paper));
       li.style.transform = `rotate(${f((r() - 0.5) * 7)}deg)`;
       $('notes').append(li);
     });
