@@ -203,4 +203,4 @@ footer { margin-top: 5rem; font-size: .95rem; color: var(--soft); }
 .flip a[aria-current] { background: #25272e; color: #fcf9f1; }
 .flip { font-family: var(--hand); }
 footer { padding-bottom: 3rem; /* flip */ }
-@media (max-width: 760px) { .flip span { display: none; } .flip a { padding: .15rem .95rem; } }
+@media (max-width: 900px) { .flip span { display: none; } .flip a { padding: .15rem .95rem; } }
