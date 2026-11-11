@@ -15,7 +15,7 @@
 .plot ul { list-style: none; margin: .3rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(6.4rem, 1fr)); text-align: center; font-size: 1.02rem; line-height: 1.15; }
 .plot li { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
 .plot svg { display: block; width: 3.6rem; height: auto; overflow: visible; }
-.plot span { overflow-wrap: anywhere; }
+.plot span { overflow-wrap: normal; }
 
 /* ---------- a · falling star ---------- */
 [data-story="a"] .wires::before, [data-story="a"] .wires::after {
@@ -27,8 +27,8 @@
 [data-story="a"] .band.blush { padding-bottom: 6rem; overflow: visible; }
 [data-story="a"] .plots .plot ul { row-gap: 1.6rem; }
 [data-story="a"] .plots span { width: 100%; padding-top: .35rem; border-top: 1.2px solid var(--ink); }  /* the ground */
-[data-story="a"] .landed { width: 1.9rem; left: calc(100% + .9rem); bottom: 1.7rem; }
-#tip { display: none; } [data-story="a"] #tip { display: inline; }
+[data-story="a"] .landed, [data-story="d"] .landed { width: 1.9rem; left: calc(100% + .9rem); bottom: 1.7rem; }
+#tip { display: none; } [data-story="a"] #tip, [data-story="d"] #tip { display: inline; }
 
 /* ---------- b · night into morning: one sky, no seams ---------- */
 [data-story="b"] .run {
@@ -51,10 +51,19 @@
 /* ---------- c · down to the water ---------- */
 [data-story="c"] .ripples { display: block; width: min(100%, 44rem); height: auto; margin: 2rem auto 0; }
 [data-story="c"] .band.sea { padding-bottom: 4rem; }
-[data-story="c"] .finds .plot ul { row-gap: 1.2rem; }
+.finds .plot ul { row-gap: 1.2rem; }
 [data-story="c"] .landed { width: 3.4rem; left: calc(100% + .6rem); bottom: 1.4rem; }
 
+/* ---------- d · the mix: falling star, arched staff, the beach; each band fades in from the one above ---------- */
+[data-story="d"] .band { background: linear-gradient(var(--from), var(--mid, var(--own)) 7rem, var(--own) 14rem); padding-top: 15rem; }
+[data-story="d"] #work { --from: var(--paper); --mid: #8f8494; --own: var(--night); }
+[data-story="d"] #projects { --from: var(--night); --mid: #6f7f9c; --own: var(--blue); }
+[data-story="d"] #about { --from: var(--blue); --own: var(--blush); padding-bottom: 6rem; }
+[data-story="d"] #skills { --from: var(--blush); --own: var(--sand); }
+[data-story="d"] #contact { --from: var(--sand); --own: var(--paper); }
+[data-story="d"] .field { padding-bottom: 2rem; }
+
 @media (max-width: 640px) {
-  [data-story="a"] .landed, [data-story="c"] .landed { left: calc(100% + .2rem); }
+  [data-story="a"] .landed, [data-story="c"] .landed, [data-story="d"] .landed { left: calc(100% + .2rem); }
   [data-story="b"] .moon.high { top: 3.5rem; right: 6%; width: 2rem; }
 }

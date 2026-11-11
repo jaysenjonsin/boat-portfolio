@@ -21,7 +21,7 @@
   const f = (n) => n.toFixed(1);
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const INK = '#25272e', RED = '#d1492e';
-  const V = document.body.dataset.story; // a: falling star, b: night into morning, c: down to the water
+  const V = document.body.dataset.story; // a: falling star, b: night into morning, c: down to the water, d: the mix of all three
 
   /* ---------- the J, sketched over a few passes of the pen ---------- */
   // Hook ends near (62, 168) and the bar starts near (96, 60) in the mark's 280 x 270 box.
@@ -258,7 +258,7 @@
       const list = el('ul');
       skills.forEach((skill) => {
         const r = rng(300 + n * 13);
-        list.append(el('li', { className: 'reveal' }, art(V === 'a' ? '0 0 60 80' : '0 18 60 50', drawings[(n * 3 + cat) % drawings.length](r, TONES[cat])), el('span', { textContent: skill })));
+        list.append(el('li', { className: 'reveal' }, art(V === 'a' ? '0 0 60 80' : '0 18 60 50', drawings[(n * 3 + cat) % drawings.length](r, TONES[cat])), el('span', { textContent: skill.replace('(', '\u200b(') })));   // may wrap before a bracket, never mid-word
         n++;
       });
       host.append(el('div', { className: `plot s${cat}` }, el('h3', { textContent: title }), list));
@@ -271,7 +271,7 @@
     const lines = svg('g', { fill: 'none', stroke: V === 'c' ? '#3c5a94' : INK, 'stroke-width': V === 'c' ? 0.9 : 0.7, opacity: 0.75 });
     // the staff takes the shape of its story: wires sagging between two poles, an arc over the sunrise, or waves
     const drift = V === 'a' ? (x) => 20 * Math.sin((x / 1200) * Math.PI) + 1.5 * Math.sin(x / 60)
-      : V === 'b' ? (x) => 18 - 34 * Math.sin((x / 1200) * Math.PI)
+      : V === 'b' || V === 'd' ? (x) => 18 - 34 * Math.sin((x / 1200) * Math.PI)
       : (x) => 4.5 * Math.sin(x / 24) + 3 * Math.sin(x / 150);
     for (let k = 0; k < 5; k++) {
       let d = '';
