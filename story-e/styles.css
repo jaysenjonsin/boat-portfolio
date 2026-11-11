@@ -79,3 +79,6 @@
   [data-story="a"] .landed, [data-story="c"] .landed, [data-story="d"] .landed, [data-story="e"] .landed { left: calc(100% + .2rem); }
   [data-story="b"] .moon.high { top: 3.5rem; right: 6%; width: 2rem; }
 }
+
+/* contact links on the first screen, so nobody has to scroll for them */
+.hero-links { margin-top: 1.6rem; font-size: 1.08rem; gap: .3rem 1.4rem; }
